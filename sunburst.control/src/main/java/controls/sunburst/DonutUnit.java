@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 
 /**
- * Created by IsNull on 17.04.14.
+ * Represents a semi ring (A part of a Donut)
  */
 public class DonutUnit extends Path {
 
