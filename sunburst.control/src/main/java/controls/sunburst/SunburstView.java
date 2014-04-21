@@ -1,6 +1,8 @@
 package controls.sunburst;
 
 import controls.skin.SunburstViewSkin;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 
@@ -9,7 +11,15 @@ import javafx.scene.control.Skin;
  * Refer to the data model for more information.
  *
  */
-public class SunburstView extends Control {
+public class SunburstView<T> extends Control {
+
+    /***************************************************************************
+     *                                                                         *
+     * Private fields                                                          *
+     *                                                                         *
+     **************************************************************************/
+
+    private final ObjectProperty<WeightedTreeItem<T>> rootNode = new SimpleObjectProperty<>(this, "rootNode");
 
 
     /***************************************************************************
@@ -25,8 +35,35 @@ public class SunburstView extends Control {
 
     }
 
+    /***************************************************************************
+     *                                                                         *
+     * Public API                                                              *
+     *                                                                         *
+     **************************************************************************/
+
+    /**
+     * Sets the root node of this view
+     * @param root
+     */
+    public void setRootNode(WeightedTreeItem<T> root){
+        rootNode.set(root);
+    }
+
+    public WeightedTreeItem<T> getRootNode(){
+        return rootNode.get();
+    }
 
 
+
+    /***************************************************************************
+     *                                                                         *
+     * Properties                                                              *
+     *                                                                         *
+     **************************************************************************/
+
+    public ObjectProperty<WeightedTreeItem<T>> rootNodeProperty(){
+        return rootNode;
+    }
 
     /***************************************************************************
      *                                                                         *
@@ -38,13 +75,11 @@ public class SunburstView extends Control {
 
     /** {@inheritDoc} */
     @Override protected Skin<?> createDefaultSkin() {
-        return new SunburstViewSkin(this);
+        return new SunburstViewSkin<T>(this);
     }
 
     /** {@inheritDoc} */
     @Override protected String getUserAgentStylesheet() {
         return SunburstView.class.getResource("sunburstview.css").toExternalForm(); //$NON-NLS-1$
     }
-
-
 }
