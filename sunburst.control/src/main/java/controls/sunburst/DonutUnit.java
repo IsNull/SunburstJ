@@ -8,34 +8,161 @@ import javafx.scene.shape.*;
  */
 public class DonutUnit extends Path {
 
-    public DonutUnit(){
+    /***************************************************************************
+     *                                                                         *
+     * Private final fields                                                    *
+     *                                                                         *
+     **************************************************************************/
 
-        drawDonutUnit(
-                200,      // Center X
-                200,      // Center Y
-                -90,    // Start angle
-                90,     // End angle
-                40,     // Inner Radius
-                30);   // Ring-Width
+    private final MoveTo moveToPoint1 = new MoveTo();
+    private final LineTo lineToPoint2 = new LineTo();
+    private final ArcTo arcOuter = new ArcTo();
+    private final LineTo lineToPoint4 = new LineTo();
+    private final ArcTo arcInner = new ArcTo();
+
+    /***************************************************************************
+     *                                                                         *
+     * Private fields                                                          *
+     *                                                                         *
+     **************************************************************************/
+
+    private double centerX = 0;
+    private double centerY = 0;
+
+    private double degreeStart = -90;
+    private double degreeEnd = 90;
+    private double innerRadius = 80;
+    private double ringWidth = 30;
+
+
+    /***************************************************************************
+     *                                                                         *
+     * Constructor                                                             *
+     *                                                                         *
+     **************************************************************************/
+
+    public DonutUnit() {
+        this.getElements().add(moveToPoint1); // Move to Point 1
+        this.getElements().add(lineToPoint2); // Draw a Line to Point 2
+
+        arcOuter.setSweepFlag(true);
+        this.getElements().add(arcOuter); // Draw an Arc to Point 3
+
+        this.getElements().add(lineToPoint4); // Draw a Line to Point 4
+
+        arcInner.setSweepFlag(false);
+        this.getElements().add(arcInner);
 
 
         this.setFill(Color.LIGHTGREEN);
         this.setStroke(Color.DARKGREEN);
         this.setFillRule(FillRule.EVEN_ODD);
+
+
+        updateDonutUnit();
+    }
+
+    /***************************************************************************
+     *                                                                         *
+     * Properties                                                              *
+     *                                                                         *
+     **************************************************************************/
+
+    public double getCenterX(){
+        return centerX;
+    }
+
+    public void setCenterX(double centerX) {
+        this.centerX = centerX;
+    }
+
+    public double getCenterY() {
+        return centerY;
+    }
+
+    public void setCenterY(double centerY) {
+        this.centerY = centerY;
+    }
+
+    public double getDegreeStart() {
+        return degreeStart;
+    }
+
+    public void setDegreeStart(double degreeStart) {
+        this.degreeStart = degreeStart;
+    }
+
+    public double getDegreeEnd() {
+        return degreeEnd;
+    }
+
+    public void setDegreeEnd(double degreeEnd) {
+        this.degreeEnd = degreeEnd;
+    }
+
+    public double getInnerRadius() {
+        return innerRadius;
+    }
+
+    public void setInnerRadius(double innerRadius) {
+        this.innerRadius = innerRadius;
+    }
+
+    public double getRingWidth() {
+        return ringWidth;
+    }
+
+    public void setRingWidth(double ringWidth) {
+        this.ringWidth = ringWidth;
+    }
+
+    /***************************************************************************
+     *                                                                         *
+     * Read-Only Properties                                                    *
+     *                                                                         *
+     **************************************************************************/
+
+    private double getArcAngle(){
+
+        double startAngle = getDegreeStart();
+        double endAngle = getDegreeEnd();
+
+        // FIXME correct calculation
+        return Math.abs(startAngle) + Math.abs(endAngle);
     }
 
 
+    /***************************************************************************
+     *                                                                         *
+     * Public API                                                              *
+     *                                                                         *
+     **************************************************************************/
+
+
     /**
-     * Creates a semi ring (Donut) path
-     *
-     * @param centerX Center Point X Coordinate
-     * @param centerY Center Point Y Coordinate
-     * @param degreeStart Start angle in degree, may be negative.
-     * @param degreeEnd End angle in degree, may be negative.
-     * @param innerRadius Inner radius of the Donut
-     * @param ringWidth Width of the Donut ring.
+     * Updates the Donut shape
      */
-    private void drawDonutUnit(double centerX, double centerY, double degreeStart, double degreeEnd, double innerRadius, double ringWidth) {
+    public void refresh(){
+        updateDonutUnit();
+    }
+
+    /***************************************************************************
+     *                                                                         *
+     * Private methods                                                         *
+     *                                                                         *
+     **************************************************************************/
+
+    /**
+     * Updates the Donut shape
+     *
+     *  centerX: Center Point X Coordinate
+     *  centerY: Center Point Y Coordinate
+     *  degreeStart: Start angle in degree, may be negative.
+     *  degreeEnd: End angle in degree, may be negative.
+     *  innerRadius: Inner radius of the Donut
+     *  ringWidth: Width of the Donut ring.
+     */
+    private void updateDonutUnit() {
         double angleAlpha = degreeStart * (Math.PI / 180);
         double angleAlphaNext = degreeEnd * (Math.PI / 180);
 
@@ -58,26 +185,30 @@ public class DonutUnit extends Path {
         double pointY4 = centerY - innerRadius * Math.cos(angleAlphaNext);
 
 
-        this.getElements().add(new MoveTo(pointX1, pointY1)); // Move to Point 1
-        this.getElements().add(new LineTo(pointX2, pointY2)); // Draw a Line to Point 2
+        boolean isLargeArc = getArcAngle() > 180;
 
-        ArcTo arcOuter = new ArcTo();                         // Draw an Arc to Point 3
-        arcOuter.setRadiusX(outerRadius);
+        moveToPoint1.setX(pointX1); // Move to Point 1
+        moveToPoint1.setY(pointY1);
+
+        lineToPoint2.setX(pointX2); // Draw a Line to Point 2
+        lineToPoint2.setY(pointY2);
+
+        arcOuter.setRadiusX(outerRadius); // Draw an Arc to Point 3
         arcOuter.setRadiusY(outerRadius);
         arcOuter.setX(pointX3);
         arcOuter.setY(pointY3);
         arcOuter.setSweepFlag(true);
-        this.getElements().add(arcOuter);
+        arcOuter.setLargeArcFlag(isLargeArc);
 
-        this.getElements().add(new LineTo(pointX4, pointY4)); // Draw a Line to Point 4
+        lineToPoint4.setX(pointX4); // Draw a Line to Point 4
+        lineToPoint4.setY(pointY4);
 
-        ArcTo arcInner = new ArcTo();                         // Draw an Arc to Point 1
-        arcInner.setRadiusX(innerRadius);
+        arcInner.setRadiusX(innerRadius);  // Draw an Arc to Point 1
         arcInner.setRadiusY(innerRadius);
         arcInner.setX(pointX1);
         arcInner.setY(pointY1);
         arcInner.setSweepFlag(false);
-        this.getElements().add(arcInner);
+        arcInner.setLargeArcFlag(isLargeArc);
     }
 
 }
