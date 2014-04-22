@@ -2,6 +2,7 @@ package controls.sunburst;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 
 /**
@@ -29,5 +30,10 @@ public class WeightedTreeItem<T> extends TreeItem<T> {
 
     public void setWeight(double weightValue){
         weightProperty().set(weightValue);
+    }
+
+
+    public ObservableList<WeightedTreeItem<T>> getChildrenWeighted() {
+        return (ObservableList<WeightedTreeItem<T>> )(ObservableList<?>)getChildren();
     }
 }
