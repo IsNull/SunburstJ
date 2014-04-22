@@ -3,6 +3,8 @@ package controls.sunburst;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 
+import java.util.IllegalFormatException;
+
 /**
  * Represents a semi ring (A part of a Donut)
  */
@@ -33,6 +35,7 @@ public class DonutUnit extends Path {
     private double degreeEnd = 370;
     private double innerRadius = 80;
     private double ringWidth = 30;
+    private double arcAngle = 0;
 
 
     /***************************************************************************
@@ -89,7 +92,11 @@ public class DonutUnit extends Path {
     }
 
     public void setDegreeStart(double degreeStart) {
-        this.degreeStart = degreeStart;
+        if(checkAngle(degreeStart, getDegreeEnd()))
+            this.degreeStart = degreeStart;
+        else {
+            throw new IllegalArgumentException("Error setting DegreeStart: ArcAngle would be bigger than 360°");
+        }
     }
 
     public double getDegreeEnd() {
@@ -97,7 +104,11 @@ public class DonutUnit extends Path {
     }
 
     public void setDegreeEnd(double degreeEnd) {
-        this.degreeEnd = degreeEnd;
+        if(checkAngle(getDegreeStart(), degreeEnd))
+            this.degreeEnd = degreeEnd;
+        else {
+            throw new IllegalArgumentException("Error setting DegreeEnd: ArcAngle would be bigger than 360°");
+        }
     }
 
     public double getInnerRadius() {
@@ -122,14 +133,38 @@ public class DonutUnit extends Path {
      *                                                                         *
      **************************************************************************/
 
-    /**
-     * Calculates the angle alpha of the circular sector by the given start and end angle.
-     * @return The angle alpha
-     */
-    private double getArcAngle(){
 
-        double startAngle = getDegreeStart();
-        double endAngle = getDegreeEnd();
+    /**
+     * Returns the current ArcAngle.
+     * @return
+     */
+    private double getArcAngle() {
+        return calculateAngle(getDegreeStart(), getDegreeEnd());
+    }
+
+    /**
+     * Checks if the ArcAngle would be greater than 360° which is not allowed.
+     * @param startAngle
+     * @param endAngle
+     * @return
+     */
+    private boolean checkAngle(double startAngle, double endAngle){
+        return (calculateAngle(startAngle, endAngle) <= 360 ) ? true : false;
+    }
+
+    /**
+     * Calculates the ArcAngle alpha of the circular sector by the given start and end angle.
+     * @param startAngle
+     * @param endAngle
+     * @return The ArcAngle alpha
+     */
+    private double calculateAngle(double startAngle, double endAngle){
+
+        if(startAngle < 0){
+            throw new IllegalArgumentException("startAngle must be > 0, current: " + startAngle);
+        }else if (endAngle < 0){
+            throw new IllegalArgumentException("endAngle must be > 0, current: " + endAngle);
+        }
 
         double alpha = 0;
 
@@ -141,9 +176,7 @@ public class DonutUnit extends Path {
         }
 
         return alpha;
-
     }
-
 
     /***************************************************************************
      *                                                                         *
