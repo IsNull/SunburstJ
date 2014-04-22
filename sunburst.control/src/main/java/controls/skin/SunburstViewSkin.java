@@ -28,7 +28,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         updateView();
     }
 
-    private final Map<Integer, List<SunburstDonut<T>>> levels = new HashMap<>();
+    private final List<List<SunburstDonut<T>>> levels = new ArrayList<>();
 
     private void updateView(){
 
@@ -41,8 +41,8 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         layout.getChildren().clear();
         levels.clear();
 
-        int level = 1;
-        levels.put(level, new ArrayList<>());
+        int level = 0;
+        levels.add(level, new ArrayList<>());
 
         for(WeightedTreeItem<T> segment : rootItem.getChildrenWeighted()) {
             SunburstDonut<T> segmentView = new SunburstDonut(segment);
@@ -56,22 +56,31 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
     @Override protected void layoutChildren(double x, double y, double w, double h) {
 
-        /*
-        for (int i = 0; i < getChildren().size(); i++) {
-            Node n = getChildren().get(i);
 
-            double nw = snapSize(n.prefWidth(h));
-            double nh = snapSize(n.prefHeight(-1));
 
-            if (i > 0) {
-                // We have to position the bread crumbs slightly overlapping
-                x = snapPosition(x - ins);
+        for (int i = 0; i < levels.size(); i++) {
+            List<SunburstDonut<T>> currentLevel = levels.get(i);
+            double levelStartAngle = 0;
+            int locate = 200;
+            for (SunburstDonut<T> donut : currentLevel){
+
+                donut.setCenterX(400);
+                donut.setCenterY(400);
+
+                donut.relocate(locate, locate);
+               // locate += 100;
+
+                donut.setDegreeStart(levelStartAngle);
+                double partAngle = 360d * donut.getItem().getRelativeWeight();
+                levelStartAngle += partAngle;
+                donut.setDegreeEnd(levelStartAngle);
+
+                donut.refresh();
+
+                System.out.println("Donut: " + donut.toString());
             }
+        }
 
-            n.resize(nw, nh);
-            n.relocate(x, y);
-            x += nw;
-        }*/
     }
 
 
@@ -89,8 +98,14 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
             this.item = item;
         }
 
+
         public WeightedTreeItem<T> getItem(){
             return item;
+        }
+
+        @Override
+        public String toString(){
+            return "{start: "+ getDegreeStart()+"; end: " + getDegreeEnd() +"}";
         }
     }
 
