@@ -27,9 +27,14 @@ public class SimpleFXShowcase extends  javafx.application.Application {
         BorderPane pane = new BorderPane();
 
         DonutUnit donut = new DonutUnit();
+        donut.setDegreeStart(-90);
+        donut.setDegreeEnd(90);
+        donut.refresh();
 
         donut.setOnMouseClicked((x) -> {
             System.out.println("you clicked a Donut-Unit!");
+            donut.setDegreeEnd(donut.getDegreeEnd() + 15);
+            donut.refresh();
         });
 
         pane.setCenter(donut);
