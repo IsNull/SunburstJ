@@ -35,7 +35,7 @@ public class SunburstViewShowcase extends  javafx.application.Application {
             System.out.println(eatable.getValue() + ": " + eatable.getRelativeWeight());
         }
 
-        sunburstView.setRootNode(rootData);
+        sunburstView.setRootItem(rootData);
 
         pane.setCenter(sunburstView);
 

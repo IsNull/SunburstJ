@@ -19,7 +19,7 @@ public class SunburstView<T> extends Control {
      *                                                                         *
      **************************************************************************/
 
-    private final ObjectProperty<WeightedTreeItem<T>> rootNode = new SimpleObjectProperty<>(this, "rootNode");
+    private final ObjectProperty<WeightedTreeItem<T>> rootItem = new SimpleObjectProperty<>(this, "rootItem");
 
 
     /***************************************************************************
@@ -45,12 +45,12 @@ public class SunburstView<T> extends Control {
      * Sets the root node of this view
      * @param root
      */
-    public void setRootNode(WeightedTreeItem<T> root){
-        rootNode.set(root);
+    public void setRootItem(WeightedTreeItem<T> root){
+        rootItem.set(root);
     }
 
-    public WeightedTreeItem<T> getRootNode(){
-        return rootNode.get();
+    public WeightedTreeItem<T> getRootItem(){
+        return rootItem.get();
     }
 
 
@@ -61,8 +61,8 @@ public class SunburstView<T> extends Control {
      *                                                                         *
      **************************************************************************/
 
-    public ObjectProperty<WeightedTreeItem<T>> rootNodeProperty(){
-        return rootNode;
+    public ObjectProperty<WeightedTreeItem<T>> rootItemProperty(){
+        return rootItem;
     }
 
     /***************************************************************************

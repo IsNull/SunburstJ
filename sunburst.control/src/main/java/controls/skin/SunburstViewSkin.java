@@ -20,7 +20,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     public SunburstViewSkin(final SunburstView<T> control) {
         super(control, new BehaviorBase<>(control, Collections.<KeyBinding> emptyList()));
 
-        control.rootNodeProperty().addListener(x -> updateView());
+        control.rootItemProperty().addListener(x -> updateView());
 
         getChildren().clear();
         getChildren().addAll(layout);
@@ -33,7 +33,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     private void updateView(){
 
         final SunburstView<T> control = getSkinnable();
-        WeightedTreeItem<T> rootItem =  control.getRootNode();
+        WeightedTreeItem<T> rootItem =  control.getRootItem();
 
         // TODO Put the Donut-Units in a pane and layout them correctly
         // For each node (until max nesting reached)
