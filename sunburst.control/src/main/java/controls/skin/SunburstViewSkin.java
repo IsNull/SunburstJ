@@ -64,10 +64,10 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
             int locate = 200;
             for (SunburstDonut<T> donut : currentLevel){
 
-                donut.setCenterX(400);
-                donut.setCenterY(400);
+                donut.setCenterX(200);
+                donut.setCenterY(200);
 
-                donut.relocate(locate, locate);
+                //donut.relocate(0, 0);
                // locate += 100;
 
                 donut.setDegreeStart(levelStartAngle);
