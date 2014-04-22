@@ -12,11 +12,11 @@ public class WeightedTreeItem<T> extends TreeItem<T> {
     private final ObjectProperty<Double> weight = new SimpleObjectProperty<>(this, "weight", 0d);
 
     public WeightedTreeItem(){
-        this(0);
+        this(0, null);
     }
 
-    public WeightedTreeItem(double weightValue){
-        setWeight(weightValue);
+    public WeightedTreeItem(double weightValue, T value){
+        setWeight(weightValue); setValue(value);
     }
 
     public ObjectProperty<Double> weightProperty(){

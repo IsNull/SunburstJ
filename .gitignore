@@ -13,4 +13,10 @@ hs_err_pid*
 
 # Hidden files
 .*
-*.iml
+
+# Generated folders/files
+target
+build
+
+# IntelliJ files
+#*.iml
