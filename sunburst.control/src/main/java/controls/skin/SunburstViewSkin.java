@@ -3,54 +3,109 @@ package controls.skin;
 import com.sun.javafx.scene.control.behavior.BehaviorBase;
 import com.sun.javafx.scene.control.behavior.KeyBinding;
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
+import controls.sunburst.DonutUnit;
 import controls.sunburst.SunburstView;
 import controls.sunburst.WeightedTreeItem;
-import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 
-import java.util.Collections;
+import java.util.*;
 
 /**
  * Skin implementation for {@link SunburstView} Control.
  */
 public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, BehaviorBase<SunburstView<T>>> {
 
+    private final Pane layout = new Pane();
+
     public SunburstViewSkin(final SunburstView<T> control) {
         super(control, new BehaviorBase<>(control, Collections.<KeyBinding> emptyList()));
 
         control.rootNodeProperty().addListener(x -> updateView());
 
+        getChildren().clear();
+        getChildren().addAll(layout);
+
         updateView();
     }
+
+    private final List<List<SunburstDonut<T>>> levels = new ArrayList<>();
 
     private void updateView(){
 
         final SunburstView<T> control = getSkinnable();
-        WeightedTreeItem<T> root =  control.getRootNode();
+        WeightedTreeItem<T> rootItem =  control.getRootNode();
 
         // TODO Put the Donut-Units in a pane and layout them correctly
-
         // For each node (until max nesting reached)
 
+        layout.getChildren().clear();
+        levels.clear();
 
+        int level = 0;
+        levels.add(level, new ArrayList<>());
+
+        for(WeightedTreeItem<T> segment : rootItem.getChildrenWeighted()) {
+            SunburstDonut<T> segmentView = new SunburstDonut(segment);
+            layout.getChildren().add(segmentView);
+            levels.get(level).add(segmentView);
+            // TODO each segment own color
+
+            // TODO nesting segment levels...
+        }
     }
 
     @Override protected void layoutChildren(double x, double y, double w, double h) {
-        for (int i = 0; i < getChildren().size(); i++) {
-            Node n = getChildren().get(i);
 
-            double nw = snapSize(n.prefWidth(h));
-            double nh = snapSize(n.prefHeight(-1));
 
-            /*
-            if (i > 0) {
-                // We have to position the bread crumbs slightly overlapping
-                double ins = n instanceof BreadCrumbButton ?  ((BreadCrumbButton)n).getArrowWidth() : 0;
-                x = snapPosition(x - ins);
-            }*/
 
-            n.resize(nw, nh);
-            n.relocate(x, y);
-            x += nw;
+        for (int i = 0; i < levels.size(); i++) {
+            List<SunburstDonut<T>> currentLevel = levels.get(i);
+            double levelStartAngle = 0;
+            int locate = 200;
+            for (SunburstDonut<T> donut : currentLevel){
+
+                donut.setCenterX(400);
+                donut.setCenterY(400);
+
+                donut.relocate(locate, locate);
+               // locate += 100;
+
+                donut.setDegreeStart(levelStartAngle);
+                double partAngle = 360d * donut.getItem().getRelativeWeight();
+                levelStartAngle += partAngle;
+                donut.setDegreeEnd(levelStartAngle);
+
+                donut.refresh();
+
+                System.out.println("Donut: " + donut.toString());
+            }
+        }
+
+    }
+
+
+    /***************************************************************************
+     *                                                                         *
+     * Internal classes                                                        *
+     *                                                                         *
+     **************************************************************************/
+
+    private class SunburstDonut<T> extends DonutUnit {
+
+        private final WeightedTreeItem<T> item;
+
+        public SunburstDonut(WeightedTreeItem<T> item){
+            this.item = item;
+        }
+
+
+        public WeightedTreeItem<T> getItem(){
+            return item;
+        }
+
+        @Override
+        public String toString(){
+            return "{start: "+ getDegreeStart()+"; end: " + getDegreeEnd() +"}";
         }
     }
 
