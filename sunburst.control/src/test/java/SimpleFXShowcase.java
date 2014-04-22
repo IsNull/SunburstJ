@@ -27,7 +27,7 @@ public class SimpleFXShowcase extends  javafx.application.Application {
         BorderPane pane = new BorderPane();
 
         DonutUnit donut = new DonutUnit();
-        donut.setDegreeStart(-90);
+        donut.setDegreeStart(100);
         donut.setDegreeEnd(90);
         donut.refresh();
 

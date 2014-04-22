@@ -29,8 +29,8 @@ public class DonutUnit extends Path {
     private double centerX = 0;
     private double centerY = 0;
 
-    private double degreeStart = -90;
-    private double degreeEnd = 90;
+    private double degreeStart = 90;
+    private double degreeEnd = 370;
     private double innerRadius = 80;
     private double ringWidth = 30;
 
@@ -122,13 +122,26 @@ public class DonutUnit extends Path {
      *                                                                         *
      **************************************************************************/
 
+    /**
+     * Calculates the angle alpha of the circular sector by the given start and end angle.
+     * @return The angle alpha
+     */
     private double getArcAngle(){
 
         double startAngle = getDegreeStart();
         double endAngle = getDegreeEnd();
 
-        // FIXME correct calculation
-        return Math.abs(startAngle) + Math.abs(endAngle);
+        double alpha = 0;
+
+        if(endAngle > startAngle){
+            alpha = endAngle - startAngle;
+        }
+        else if(startAngle > endAngle){
+            alpha = 360 - (startAngle - endAngle);
+        }
+
+        return alpha;
+
     }
 
 
@@ -168,19 +181,19 @@ public class DonutUnit extends Path {
 
         double outerRadius = innerRadius + ringWidth;
 
-        //Point 1
+        //Point 1, inner end point
         double pointX1 = centerX + innerRadius * Math.sin(angleAlpha);
         double pointY1 = centerY - innerRadius * Math.cos(angleAlpha);
 
-        //Point 2
+        //Point 2, outer end point
         double pointX2 = centerX + outerRadius * Math.sin(angleAlpha);
         double pointY2 = centerY - outerRadius * Math.cos(angleAlpha);
 
-        //Point 3
+        //Point 3, outer start point
         double pointX3 = centerX + outerRadius * Math.sin(angleAlphaNext);
         double pointY3 = centerY - outerRadius * Math.cos(angleAlphaNext);
 
-        //Point 4
+        //Point 4, inner start point
         double pointX4 = centerX + innerRadius * Math.sin(angleAlphaNext);
         double pointY4 = centerY - innerRadius * Math.cos(angleAlphaNext);
 
