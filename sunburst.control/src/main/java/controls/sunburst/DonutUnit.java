@@ -3,8 +3,6 @@ package controls.sunburst;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 
-import java.util.IllegalFormatException;
-
 /**
  * Represents a semi ring (A part of a Donut)
  */
@@ -255,6 +253,12 @@ public class DonutUnit extends Path {
         arcInner.setY(pointY1);
         arcInner.setSweepFlag(false);
         arcInner.setLargeArcFlag(isLargeArc);
+    }
+
+
+    @Override
+    public String toString(){
+        return "{start: "+ getDegreeStart()+"; end: " + getDegreeEnd() + "; arc angle: " + getArcAngle() + "}";
     }
 
 }

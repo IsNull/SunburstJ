@@ -103,10 +103,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
             return item;
         }
 
-        @Override
-        public String toString(){
-            return "{start: "+ getDegreeStart()+"; end: " + getDegreeEnd() +"}";
-        }
+
     }
 
 }
