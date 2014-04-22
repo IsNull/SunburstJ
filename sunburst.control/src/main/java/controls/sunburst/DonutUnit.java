@@ -30,10 +30,9 @@ public class DonutUnit extends Path {
     private double centerY = 0;
 
     private double degreeStart = 90;
-    private double degreeEnd = 370;
+    private double degreeEnd = 300;
     private double innerRadius = 80;
     private double ringWidth = 30;
-    private double arcAngle = 0;
 
 
     /***************************************************************************
@@ -93,7 +92,7 @@ public class DonutUnit extends Path {
         if(checkAngle(degreeStart, getDegreeEnd()))
             this.degreeStart = degreeStart;
         else {
-            throw new IllegalArgumentException("Error setting DegreeStart: ArcAngle would be bigger than 360°");
+            throw new IllegalArgumentException("Error setting DegreeStart: ArcAngle would be bigger than 360°, current ArcAngle: " + getArcAngle() + " given DegreeStart: " + degreeStart);
         }
     }
 
@@ -105,7 +104,7 @@ public class DonutUnit extends Path {
         if(checkAngle(getDegreeStart(), degreeEnd))
             this.degreeEnd = degreeEnd;
         else {
-            throw new IllegalArgumentException("Error setting DegreeEnd: ArcAngle would be bigger than 360°");
+            throw new IllegalArgumentException("Error setting DegreeEnd: ArcAngle would be bigger than 360°, current ArcAngle: " + getArcAngle() + " given DegreeEnd: " + degreeEnd);
         }
     }
 
