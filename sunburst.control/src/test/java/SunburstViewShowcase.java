@@ -43,6 +43,7 @@ public class SunburstViewShowcase extends  javafx.application.Application {
         stage.show();
     }
 
+
     /**
      * Build test data model
      * @return
@@ -50,15 +51,16 @@ public class SunburstViewShowcase extends  javafx.application.Application {
     private WeightedTreeItem<String> getData(){
         WeightedTreeItem<String> root = new WeightedTreeItem(1, "eatables");
 
+        WeightedTreeItem<String> meat = new WeightedTreeItem(3, "meat");
+        WeightedTreeItem<String> potato = new WeightedTreeItem(5, "potato");
         WeightedTreeItem<String> fruits = new WeightedTreeItem(10, "fruits");
 
+        // Fruits
         WeightedTreeItem<String> apples = new WeightedTreeItem(5, "apples");
         WeightedTreeItem<String> pears = new WeightedTreeItem(5, "pears");
         fruits.getChildren().addAll(apples, pears);
 
 
-        WeightedTreeItem<String> meat = new WeightedTreeItem(3, "meat");
-        WeightedTreeItem<String> potato = new WeightedTreeItem(5, "potato");
 
         root.getChildren().addAll(fruits, meat, potato);
 
