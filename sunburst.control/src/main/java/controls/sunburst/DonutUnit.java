@@ -55,8 +55,8 @@ public class DonutUnit extends Path {
         this.getElements().add(arcInner);
 
 
-        this.setFill(Color.LIGHTGREEN);
-        this.setStroke(Color.DARKGREEN);
+        this.setFill(Color.LIGHTGRAY);
+        this.setStroke(Color.DARKGRAY);
         this.setFillRule(FillRule.EVEN_ODD);
 
 

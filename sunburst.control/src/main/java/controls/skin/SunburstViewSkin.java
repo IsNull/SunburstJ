@@ -43,7 +43,6 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
         // Create Sectors
         int sectorNum = 0;
-
         for(WeightedTreeItem<T> sectorItem : rootItem.getChildrenWeighted()) {
             SunburstDonutUnit<T> unit = buildDonutUnit(sectorItem);
             SunburstSector<T> sector = new SunburstSector<>(unit, sectorColor(sectorNum));
@@ -85,18 +84,23 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         double centerY = h/2d;
 
         double sectorStartDegree = 0;
+
         for(SunburstSector<T> sector : sectors){
             // For each sector
             SunburstDonutUnit<T> unit = sector.getSectorUnit();
 
             double sectorAngle = 360d * unit.getItem().getRelativeWeight();
 
-            unit.setDegreeStart(sectorStartDegree);
-            unit.setDegreeEnd(sectorStartDegree + sectorAngle);
             unit.setCenterX(centerX);
             unit.setCenterY(centerY);
+
+            unit.setDegreeStart(sectorStartDegree);
+            unit.setDegreeEnd(sectorStartDegree + sectorAngle);
+
             unit.setRingWidth(donutWidth);
             unit.setInnerRadius(startRadius);
+
+            unit.refresh();
 
             layoutChildrenRecursive(unit, centerX, centerY, 1);
 

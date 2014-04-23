@@ -80,4 +80,21 @@ public class SunburstViewShowcase extends  javafx.application.Application {
 
         return root;
     }
+
+    /**
+     * Build test data model
+     * @return
+     */
+    private WeightedTreeItem<String> getDataL1(){
+        WeightedTreeItem<String> root = new WeightedTreeItem(1, "eatables");
+
+        WeightedTreeItem<String> meat = new WeightedTreeItem(3, "meat");
+        WeightedTreeItem<String> potato = new WeightedTreeItem(5, "potato");
+        WeightedTreeItem<String> fruits = new WeightedTreeItem(10, "fruits");
+
+
+        root.getChildren().addAll(fruits, meat, potato);
+
+        return root;
+    }
 }
