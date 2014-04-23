@@ -66,15 +66,33 @@ public class SunburstViewShowcase extends  javafx.application.Application {
         WeightedTreeItem<String> goldenDelicious = new WeightedTreeItem(2, "golden delicious");
         WeightedTreeItem<String> elStar = new WeightedTreeItem(2, "El Star");
 
+        apples.getChildren().addAll(goldenGala, goldenDelicious, elStar);
+
         // pears
         WeightedTreeItem<String> pear1 = new WeightedTreeItem(2, "pear 1");
         WeightedTreeItem<String> pear2 = new WeightedTreeItem(5, "pear 2");
 
-
-        apples.getChildren().addAll(goldenGala, goldenDelicious, elStar);
-
-
         pears.getChildren().addAll(pear1, pear2);
+
+
+        // POTATOS
+
+        WeightedTreeItem<String> potatoOil = new WeightedTreeItem(5, "potato oil");
+
+        WeightedTreeItem<String> frites = new WeightedTreeItem(20, "frites");
+        WeightedTreeItem<String> bigfrites = new WeightedTreeItem(2, "bigfrites");
+        potatoOil.getChildren().addAll(frites, bigfrites);
+
+
+        WeightedTreeItem<String> potatoCooked = new WeightedTreeItem(5, "potato cooked");
+        WeightedTreeItem<String> saltPotato = new WeightedTreeItem(3, "salt potato");
+        WeightedTreeItem<String> otherCookedPotato = new WeightedTreeItem(4, "other");
+
+        potatoCooked.getChildren().addAll(saltPotato, otherCookedPotato);
+
+        potato.getChildren().addAll(potatoOil, potatoCooked);
+
+
 
         root.getChildren().addAll(fruits, meat, potato);
 
