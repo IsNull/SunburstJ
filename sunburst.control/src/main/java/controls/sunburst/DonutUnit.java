@@ -2,6 +2,7 @@ package controls.sunburst;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import math.Geometry;
 
 /**
  * Represents a semi ring (A part of a Donut)
@@ -136,7 +137,7 @@ public class DonutUnit extends Path {
      * @return
      */
     public double getArcAngle() {
-        return calculateAngle(getDegreeStart(), getDegreeEnd());
+        return Geometry.calculateAngleClockwise(getDegreeStart(), getDegreeEnd());
     }
 
 
@@ -233,33 +234,9 @@ public class DonutUnit extends Path {
      * @return
      */
     private boolean checkAngle(double startAngle, double endAngle){
-        return (calculateAngle(startAngle, endAngle) <= 360 ) ? true : false;
+        return (Geometry.calculateAngleClockwise(startAngle, endAngle) <= 360 ) ? true : false;
     }
 
-    /**
-     * Calculates the ArcAngle alpha of the circular sector by the given start and end angle.
-     * @param startAngle
-     * @param endAngle
-     * @return The ArcAngle alpha
-     */
-    private double calculateAngle(double startAngle, double endAngle){
 
-        if(startAngle < 0){
-            throw new IllegalArgumentException("startAngle must be > 0, current: " + startAngle);
-        }else if (endAngle < 0){
-            throw new IllegalArgumentException("endAngle must be > 0, current: " + endAngle);
-        }
-
-        double alpha = 0;
-
-        if(endAngle > startAngle){
-            alpha = endAngle - startAngle;
-        }
-        else if(startAngle > endAngle){
-            alpha = 360 - (startAngle - endAngle);
-        }
-
-        return alpha;
-    }
 
 }

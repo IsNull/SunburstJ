@@ -69,4 +69,8 @@ public class WeightedTreeItem<T> extends TreeItem<T> {
         return totalChildrenAbsoluteWeight;
     }
 
+    public String toString(){
+        return "(" + getValue().toString() + " : " + getRelativeWeight()+ ")";
+    }
+
 }

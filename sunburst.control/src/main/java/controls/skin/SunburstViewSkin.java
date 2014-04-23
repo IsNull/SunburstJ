@@ -41,15 +41,18 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         layout.getChildren().clear();
         sectors.clear();
 
+        // Create Sectors
         int sectorNum = 0;
+        double sectorStartDegree = 0;
         for(WeightedTreeItem<T> sectorItem : rootItem.getChildrenWeighted()) {
-            SunburstDonutUnit<T> innerSectorUnit = buildDonutUnit(sectorItem);
 
-            SunburstSector<T> sector = new SunburstSector<>(innerSectorUnit, sectorColor(sectorNum));
-           // innerSectorUnit.setFill(sector.getColor());
+            double sectorAngle = 360d * sectorItem.getRelativeWeight();
+            SunburstSector<T> sector = new SunburstSector<>(sectorStartDegree, sectorColor(sectorNum), sectorAngle);
+            sectorStartDegree += sectorAngle;
 
             sectors.add(sector);
 
+            sector.addUntiToLevel(0, buildDonutUnit(sectorItem));
             updateSector(sector, sectorItem, 1);
             sectorNum++;
         }
@@ -73,7 +76,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     }
 
     private Color sectorColor(int sector){
-        Color[] colors = { Color.ALICEBLUE, Color.BEIGE, Color.CRIMSON, Color.LIGHTGREEN, Color.CORNFLOWERBLUE };
+        Color[] colors = { Color.LIGHTGREEN, Color.BEIGE,  Color.CORNFLOWERBLUE, Color.CRIMSON, Color.GREY};
         return colors[sector % colors.length];
     }
 
@@ -87,16 +90,15 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         double startRadius = 80;
         double sectorOffset = donutWidth;
 
-        double sectorStartAngle = 0;
         for(SunburstSector<T> sector : sectors){
             // For each sector
 
-            double sectorFullAngle = sector.getSectorUnit().getArcAngle();
-            System.out.println("sectorFullAngle: " + sectorFullAngle);
+            double sectorFullAngle = sector.getSectorAngle();
+            System.out.println("sector: " + sector);
 
             for (int level = 0; level < sector.levelCount(); level++) {
                 List<SunburstDonutUnit<T>> currentLevel = sector.getSectorLevel(level);
-                double startAngle = sectorStartAngle;
+                double startAngle = sector.getStartAngle();
 
                 //System.out.println("Sector " + " Level: " + 0 + " startAngle: " + startAngle);
 
@@ -109,7 +111,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
                     System.out.println("startAngle: " + startAngle);
                     donut.setDegreeStart(startAngle);
-                    double partAngle = level == 0
+                    double partAngle = (level == 0)
                             ? sectorFullAngle
                             : sectorFullAngle * donut.getItem().getRelativeWeight();
 
@@ -121,7 +123,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
                 }
             }
 
-            sectorStartAngle += 360d * sector.getSectorUnit().getItem().getRelativeWeight();
+
         }
     }
 
@@ -147,9 +149,12 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
             Tooltip.install(this, t);
         }
 
-
         public WeightedTreeItem<T> getItem(){
             return item;
+        }
+
+        public String toString(){
+            return "[" + getItem() + "; " + getArcAngle() + "°]";
         }
 
     }
@@ -159,18 +164,15 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      * @param <T>
      */
     private class SunburstSector<T> {
+        private final double sectorAngle;
+        private final double startAngle;
         private final Color color;
-        private final SunburstDonutUnit<T> sectorUnit;
         private final Map<Integer, List<SunburstDonutUnit<T>>> sectorLevels = new HashMap<>();
 
-        public SunburstSector(SunburstDonutUnit<T> sectorUnit, Color color){
-            this.sectorUnit = sectorUnit;
+        public SunburstSector(double startAngle, Color color, double sectorAngle){
+            this.startAngle = startAngle;
             this.color = color;
-            addUntiToLevel(0, sectorUnit);
-        }
-
-        public SunburstDonutUnit<T> getSectorUnit() {
-            return sectorUnit;
+            this.sectorAngle = sectorAngle;
         }
 
         public int levelCount(){
@@ -199,6 +201,19 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
         public Color getColor() {
             return color;
+        }
+
+        @Override
+        public String toString(){
+            return "{" + sectorLevels.get(0).get(0).toString() +  "; levels: "+ levelCount() + "}";
+        }
+
+        public double getSectorAngle() {
+            return sectorAngle;
+        }
+
+        public double getStartAngle() {
+            return startAngle;
         }
     }
 
