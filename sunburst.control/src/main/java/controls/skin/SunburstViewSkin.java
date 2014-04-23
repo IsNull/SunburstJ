@@ -45,6 +45,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         int sectorNum = 0;
         for(WeightedTreeItem<T> sectorItem : rootItem.getChildrenWeighted()) {
             SunburstDonutUnit<T> unit = buildDonutUnit(sectorItem);
+
             SunburstSector<T> sector = new SunburstSector<>(unit, sectorColor(sectorNum));
             sectors.add(sector);
             updateSector(unit, sector.getColor());
@@ -53,6 +54,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     }
 
     private void updateSector(SunburstDonutUnit<T> parent, Color color){
+        parent.setFill(color);
         for(WeightedTreeItem<T> child : parent.getItem().getChildrenWeighted()){
             SunburstDonutUnit<T> unit = buildDonutUnit(child);
             unit.setFill(color);
