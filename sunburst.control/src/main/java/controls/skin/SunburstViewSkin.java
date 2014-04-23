@@ -60,7 +60,9 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
     /**
      * Layout all children (all DonutUnits).
-     *
+     * This method does the layout for all DonutUnits of the inner most Circle.
+     * Then it uses {#layoutChildrenRecursive} to layout these root Units children
+     * recursively.
      *
      * @param x pos
      * @param y pos
@@ -93,6 +95,41 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
             layoutChildrenRecursive(unit, centerX, centerY, 1);
 
             sectorStartDegree += sectorAngle;
+        }
+    }
+
+    /**
+     * Layout the given Donut-Units children.
+     * The parentUnit's layout must already be setup correctly.
+     *
+     * @param parentUnit The unit of which children should be layout.
+     * @param centerX
+     * @param centerY
+     * @param level
+     */
+    private void layoutChildrenRecursive(SunburstDonutUnit<T> parentUnit, double centerX, double centerY, int level){
+
+        double startDegree = parentUnit.getDegreeStart();
+        double fullDegree = parentUnit.getArcAngle();
+
+        for(SunburstDonutUnit<T> unit : parentUnit.getChildren()){
+
+            double angle = fullDegree * unit.getItem().getRelativeWeight();
+
+            unit.setDegreeStart(startDegree);
+            unit.setDegreeEnd(startDegree + angle);
+
+            startDegree += angle;
+
+            unit.setCenterX(centerX);
+            unit.setCenterY(centerY);
+            unit.setRingWidth(donutWidth);
+            unit.setInnerRadius(startRadius + (((double)level) * sectorOffset));
+
+            unit.refresh();
+
+            // Now recourse into to layout this child units children, and so forth..
+            layoutChildrenRecursive(unit, centerX, centerY, level + 1);
         }
     }
 
@@ -178,30 +215,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
        return colors[sector % colors.length];
     }
 
-    private void layoutChildrenRecursive(SunburstDonutUnit<T> parentUnit, double centerX, double centerY, int level){
 
-        double startDegree = parentUnit.getDegreeStart();
-        double fullDegree = parentUnit.getArcAngle();
-
-        for(SunburstDonutUnit<T> unit : parentUnit.getChildren()){
-
-            double angle = fullDegree * unit.getItem().getRelativeWeight();
-
-            unit.setDegreeStart(startDegree);
-            unit.setDegreeEnd(startDegree + angle);
-
-            startDegree += angle;
-
-            unit.setCenterX(centerX);
-            unit.setCenterY(centerY);
-            unit.setRingWidth(donutWidth);
-            unit.setInnerRadius(startRadius + (((double)level) * sectorOffset));
-
-            unit.refresh();
-
-            layoutChildrenRecursive(unit, centerX, centerY, level + 1);
-        }
-    }
 
 
     /***************************************************************************
