@@ -61,6 +61,20 @@ public class SunburstViewShowcase extends  javafx.application.Application {
         fruits.getChildren().addAll(apples, pears);
 
 
+        // apples
+        WeightedTreeItem<String> goldenGala = new WeightedTreeItem(2, "golden gala");
+        WeightedTreeItem<String> goldenDelicious = new WeightedTreeItem(2, "golden delicious");
+        WeightedTreeItem<String> elStar = new WeightedTreeItem(2, "El Star");
+
+        // pears
+        WeightedTreeItem<String> pear1 = new WeightedTreeItem(2, "pear 1");
+        WeightedTreeItem<String> pear2 = new WeightedTreeItem(5, "pear 2");
+
+
+        apples.getChildren().addAll(goldenGala, goldenDelicious, elStar);
+
+
+        pears.getChildren().addAll(pear1, pear2);
 
         root.getChildren().addAll(fruits, meat, potato);
 

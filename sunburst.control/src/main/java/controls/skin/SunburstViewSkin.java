@@ -93,14 +93,15 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         for(SunburstSector<T> sector : sectors){
             // For each sector
 
-            double sectorFullAngle = sector.getSectorAngle();
             System.out.println("sector: " + sector);
+            final double sectorFullAngle = sector.getSectorAngle();
+            final double sectorStartAngle = sector.getStartAngle();
+
 
             for (int level = 0; level < sector.levelCount(); level++) {
-                List<SunburstDonutUnit<T>> currentLevel = sector.getSectorLevel(level);
-                double startAngle = sector.getStartAngle();
 
-                //System.out.println("Sector " + " Level: " + 0 + " startAngle: " + startAngle);
+                List<SunburstDonutUnit<T>> currentLevel = sector.getSectorLevel(level);
+                double startAngle = sectorStartAngle;
 
                 for (SunburstDonutUnit<T> donut : currentLevel){
 
@@ -110,6 +111,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
                     donut.setInnerRadius(startRadius + (((double)level) * sectorOffset));
 
                     System.out.println("startAngle: " + startAngle);
+
                     donut.setDegreeStart(startAngle);
                     double partAngle = (level == 0)
                             ? sectorFullAngle
