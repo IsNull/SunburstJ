@@ -1,7 +1,7 @@
 package math;
 
 /**
- *
+ * Geometry math helper methods
  */
 public final class Geometry {
 

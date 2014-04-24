@@ -57,7 +57,7 @@ public class SunburstViewShowcase extends  javafx.application.Application {
 
         // Fruits
         WeightedTreeItem<String> apples = new WeightedTreeItem(5, "apples");
-        WeightedTreeItem<String> pears = new WeightedTreeItem(5, "pears");
+        WeightedTreeItem<String> pears = new WeightedTreeItem(3, "pears");
         fruits.getChildren().addAll(apples, pears);
 
 
@@ -74,19 +74,26 @@ public class SunburstViewShowcase extends  javafx.application.Application {
 
         pears.getChildren().addAll(pear1, pear2);
 
+        // Pear 2 details
+
 
         // POTATOS
 
         WeightedTreeItem<String> potatoOil = new WeightedTreeItem(5, "potato oil");
 
         WeightedTreeItem<String> frites = new WeightedTreeItem(20, "frites");
-        WeightedTreeItem<String> bigfrites = new WeightedTreeItem(2, "bigfrites");
+        WeightedTreeItem<String> bigfrites = new WeightedTreeItem(7, "bigfrites");
         potatoOil.getChildren().addAll(frites, bigfrites);
+
+        WeightedTreeItem<String> frites_d1 = new WeightedTreeItem(2, "fries 2 D1");
+        WeightedTreeItem<String> frites_d2 = new WeightedTreeItem(5, "fries 2 D2");
+        WeightedTreeItem<String> frites_d3 = new WeightedTreeItem(3, "fries 2 D3");
+        frites.getChildren().addAll(frites_d1, frites_d2, frites_d3);
 
 
         WeightedTreeItem<String> potatoCooked = new WeightedTreeItem(5, "potato cooked");
         WeightedTreeItem<String> saltPotato = new WeightedTreeItem(3, "salt potato");
-        WeightedTreeItem<String> otherCookedPotato = new WeightedTreeItem(4, "other");
+        WeightedTreeItem<String> otherCookedPotato = new WeightedTreeItem(4, "other potato");
 
         potatoCooked.getChildren().addAll(saltPotato, otherCookedPotato);
 
