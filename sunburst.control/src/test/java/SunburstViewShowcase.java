@@ -1,6 +1,10 @@
+import controls.skin.SunburstViewSkin;
 import controls.sunburst.SunburstView;
 import controls.sunburst.WeightedTreeItem;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -37,6 +41,17 @@ public class SunburstViewShowcase extends  javafx.application.Application {
 
         sunburstView.setRootItem(rootData);
 
+        Button btn = new Button();
+        btn.setText("Change Colors");
+        btn.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+               // TODO call updateView;
+            }
+        });
+
+        pane.setBottom(btn);
         pane.setCenter(sunburstView);
 
         stage.setScene(new Scene(pane, 1080, 800));

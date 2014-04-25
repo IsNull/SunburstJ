@@ -3,9 +3,7 @@ package controls.skin;
 import com.sun.javafx.scene.control.behavior.BehaviorBase;
 import com.sun.javafx.scene.control.behavior.KeyBinding;
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
-import controls.sunburst.DonutUnit;
-import controls.sunburst.SunburstView;
-import controls.sunburst.WeightedTreeItem;
+import controls.sunburst.*;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -23,6 +21,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     private final List<SunburstSector<T>> sectors = new ArrayList<>();
     // TODO make this dynamic (random?) or increase list
     private Color[] colors = { Color.LIGHTGREEN, Color.GREY,   Color.CORNFLOWERBLUE, Color.CRIMSON, Color.ORANGE};
+    private IColorStrategy colorStrategy;
 
 
     // TODO Make these control / CSS properties
@@ -43,7 +42,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      */
     public SunburstViewSkin(final SunburstView<T> control) {
         super(control, new BehaviorBase<>(control, Collections.<KeyBinding> emptyList()));
-
+        colorStrategy = new ColorStrategyRandom();
         control.rootItemProperty().addListener(x -> updateView());
 
         getChildren().clear();
@@ -97,6 +96,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
             sectorStartDegree += sectorAngle;
         }
     }
+
 
     /**
      * Layout the given Donut-Units children.
@@ -157,7 +157,8 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
             SunburstDonutUnit<T> unit = buildDonutUnit(sectorItem);
 
             // Each sector has its own primary color
-            Color sectorColor = sectorColor(sectorNum);
+            //Color sectorColor = sectorColor(sectorNum);
+            Color sectorColor = colorStrategy.getColor();
             SunburstSector<T> sector = new SunburstSector<>(unit, sectorColor);
             sectors.add(sector);
 
