@@ -18,7 +18,7 @@ import java.util.*;
 public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, BehaviorBase<SunburstView<T>>> {
 
     private final Pane layout = new Pane();
-    private final List<SunburstSector<T>> sectors = new ArrayList<>();
+    private final Map<WeightedTreeItem<T>, SunburstSector<T>> sectorMap = new HashMap<>();
     private IColorStrategy colorStrategy;
 
 
@@ -153,7 +153,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         final SunburstView<T> control = getSkinnable();
         WeightedTreeItem<T> rootItem =  control.getRootItem();
 
-        clearLayout();
+        clearAll();
 
         // Create sectors
         int sectorNum = 0;
@@ -161,7 +161,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
             // Each sector has its own primary color.
             Color sectorColor = colorStrategy.getColor();
             SunburstSector<T> sector = new SunburstSector<>(sectorItem, sectorColor);
-            sectors.add(sector);
+            sectorMap.put(sectorItem, sector);
             sectorNum++;
         }
     }
@@ -173,18 +173,45 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      */
     private void updateSelectedItem(){
 
-        clearLayout();
+        clearCurrentView();
 
+        WeightedTreeItem<T> rootItem = getSkinnable().getRootItem();
         WeightedTreeItem<T> selectedItemRoot = getSkinnable().getSelectedItem();
 
-        if(selectedItemRoot != null) {
+        if(selectedItemRoot != null && selectedItemRoot != null) {
 
-            // TODO find sector / sectors for this item root?
-
-            for (WeightedTreeItem<T> child : selectedItemRoot.getChildrenWeighted()) {
-                buildUnitsRecursive(child, Color.CORNFLOWERBLUE); // FIXME Strategy & sector?
+            if(rootItem.equals(selectedItemRoot)){
+                // Root item
+                for (WeightedTreeItem<T> child : selectedItemRoot.getChildrenWeighted()) {
+                    SunburstSector<T> sector = findSector(child);
+                    buildUnitsRecursive(child, sector.getColor());
+                }
+            }else{
+                // Not root, all have same sector
+                SunburstSector<T> sector = findSector(selectedItemRoot);
+                for (WeightedTreeItem<T> child : selectedItemRoot.getChildrenWeighted()) {
+                    buildUnitsRecursive(child, sector.getColor());
+                }
             }
+
         }
+    }
+
+    private SunburstSector<T> findSector(WeightedTreeItem<T> item){
+
+        WeightedTreeItem<T> root = getSkinnable().getRootItem();
+        WeightedTreeItem<T> sector = item;
+
+        while (sector != null){
+            if(root.equals(sector.getParent())){
+                // We found the sector item
+                break;
+            }
+            // Next level
+            sector = (WeightedTreeItem<T>)sector.getParent();
+        }
+
+        return sector != null ? sectorMap.get(sector) : null;
     }
 
 
@@ -213,10 +240,17 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     /**
      * Clears the complete layout (all nodes)
      */
-    private void clearLayout(){
-        layout.getChildren().clear();
-        sectors.clear();
+    private void clearAll(){
+        sectorMap.clear();
         donutCache.clear();
+        clearCurrentView();
+    }
+
+    /**
+     *
+     */
+    private void clearCurrentView(){
+        layout.getChildren().clear();
     }
 
 
