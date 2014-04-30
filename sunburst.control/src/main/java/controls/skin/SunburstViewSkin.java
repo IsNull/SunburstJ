@@ -19,8 +19,6 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
     private final Pane layout = new Pane();
     private final List<SunburstSector<T>> sectors = new ArrayList<>();
-    // TODO make this dynamic (random?) or increase list
-    private Color[] colors = { Color.LIGHTGREEN, Color.GREY,   Color.CORNFLOWERBLUE, Color.CRIMSON, Color.ORANGE};
     private IColorStrategy colorStrategy;
 
 
@@ -43,12 +41,13 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     public SunburstViewSkin(final SunburstView<T> control) {
         super(control, new BehaviorBase<>(control, Collections.<KeyBinding> emptyList()));
         colorStrategy = new ColorStrategyRandom();
-        control.rootItemProperty().addListener(x -> updateView());
+        control.rootItemProperty().addListener(x -> updateRootModel());
+        control.selectedItemProperty().addListener(x -> updateSelectedItem());
 
         getChildren().clear();
         getChildren().addAll(layout);
 
-        updateView();
+        updateRootModel();
     }
 
     /***************************************************************************
@@ -75,9 +74,10 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
         double sectorStartDegree = 0;
 
-        for(SunburstSector<T> sector : sectors){
-            SunburstDonutUnit<T> unit = sector.getSectorUnit();
+        WeightedTreeItem<T> currentRoot = getSkinnable().getSelectedItem();
 
+        for(WeightedTreeItem<T> innerChild : currentRoot.getChildrenWeighted()){
+            SunburstDonutUnit<T> unit = findOrCreate(innerChild);
             double sectorAngle = 360d * unit.getItem().getRelativeWeight();
 
             unit.setCenterX(centerX);
@@ -91,7 +91,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
             unit.refresh();
 
-            layoutChildrenRecursive(unit, centerX, centerY, 1);
+            layoutChildrenRecursive(unit.getItem(), centerX, centerY, 1);
 
             sectorStartDegree += sectorAngle;
         }
@@ -102,17 +102,20 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      * Layout the given Donut-Units children.
      * The parentUnit's layout must already be setup correctly.
      *
-     * @param parentUnit The unit of which children should be layout.
+     * @param parentItem The unit of which children should be layout.
      * @param centerX
      * @param centerY
      * @param level
      */
-    private void layoutChildrenRecursive(SunburstDonutUnit<T> parentUnit, double centerX, double centerY, int level){
+    private void layoutChildrenRecursive(WeightedTreeItem<T> parentItem, double centerX, double centerY, int level){
 
+        SunburstDonutUnit<T> parentUnit = findOrCreate(parentItem);
         double startDegree = parentUnit.getDegreeStart();
         double fullDegree = parentUnit.getArcAngle();
 
-        for(SunburstDonutUnit<T> unit : parentUnit.getChildren()){
+        for(WeightedTreeItem<T> child : parentItem.getChildrenWeighted()){
+
+            SunburstDonutUnit<T> unit = findOrCreate(child);
 
             double angle = fullDegree * unit.getItem().getRelativeWeight();
 
@@ -129,7 +132,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
             unit.refresh();
 
             // Now recourse into to layout this child units children, and so forth..
-            layoutChildrenRecursive(unit, centerX, centerY, level + 1);
+            layoutChildrenRecursive(child, centerX, centerY, level + 1);
         }
     }
 
@@ -140,11 +143,11 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      **************************************************************************/
 
     /**
-     * The update is responsible for creating all child nodes,
-     * and setting their visual properties (i.e. Color)
+     * The root model update is responsible for creating the initial sectors and their
+     * colors.
      *
      */
-    private void updateView(){
+    private void updateRootModel(){
 
         final SunburstView<T> control = getSkinnable();
         WeightedTreeItem<T> rootItem =  control.getRootItem();
@@ -154,18 +157,55 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         // Create sectors
         int sectorNum = 0;
         for(WeightedTreeItem<T> sectorItem : rootItem.getChildrenWeighted()) {
-            SunburstDonutUnit<T> unit = buildDonutUnit(sectorItem);
-
-            // Each sector has its own primary color
-            //Color sectorColor = sectorColor(sectorNum);
+            // Each sector has its own primary color.
             Color sectorColor = colorStrategy.getColor();
-            SunburstSector<T> sector = new SunburstSector<>(unit, sectorColor);
+            SunburstSector<T> sector = new SunburstSector<>(sectorItem, sectorColor);
             sectors.add(sector);
-
-            buildUnitsRecursive(unit, sector.getColor());
             sectorNum++;
         }
     }
+
+    /**
+     * The selected item defines the whole view, thus we update the whole
+     * view and create the nodes necessary.
+     *
+     */
+    private void updateSelectedItem(){
+
+        clearLayout();
+
+        WeightedTreeItem<T> selectedItemRoot = getSkinnable().getSelectedItem();
+
+        if(selectedItemRoot != null) {
+
+            // TODO find sector / sectors for this item root?
+
+            for (WeightedTreeItem<T> child : selectedItemRoot.getChildrenWeighted()) {
+                buildUnitsRecursive(child, Color.CORNFLOWERBLUE); // FIXME Strategy & sector?
+            }
+        }
+    }
+
+    /**
+     * Builds the DonutUnits recursively (creates the Nodes) and sets the color
+     *
+     * @param parentItem Parent Item
+     * @param color Primary color tone
+     */
+    private void buildUnitsRecursive(WeightedTreeItem<T> parentItem, Color color){
+        SunburstDonutUnit<T> parent = findOrCreate(parentItem);
+
+        parent.setFill(color);
+        for(WeightedTreeItem<T> child : parentItem.getChildrenWeighted()){
+            SunburstDonutUnit<T> unit = findOrCreate(child);
+            unit.setFill(color);
+
+            if(!child.isLeaf()){
+                buildUnitsRecursive(child, color); // Recourse into
+            }
+        }
+    }
+
 
     /**
      * Clears the complete layout (all nodes)
@@ -175,24 +215,18 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         sectors.clear();
     }
 
-    /**
-     * Builds the DonutUnits recursively (creates the Nodes) and sets the color
-     *
-     * @param parent Parent DonutUnit
-     * @param color Primary color tone
-     */
-    private void buildUnitsRecursive(SunburstDonutUnit<T> parent, Color color){
-        parent.setFill(color);
-        for(WeightedTreeItem<T> child : parent.getItem().getChildrenWeighted()){
-            SunburstDonutUnit<T> unit = buildDonutUnit(child);
-            unit.setFill(color);
 
-            parent.getChildren().add(unit);
+    private Map<WeightedTreeItem<T>, SunburstDonutUnit<T>> donutCache = new HashMap<>();
 
-            if(!child.isLeaf()){
-                buildUnitsRecursive(unit, color); // Recourse into
-            }
+    private SunburstDonutUnit<T> findOrCreate(WeightedTreeItem<T> item){
+        SunburstDonutUnit<T> view = donutCache.get(item);
+
+        if(view == null){
+            view = buildDonutUnit2(item);
+            donutCache.put(item, view);
         }
+
+        return view;
     }
 
     /**
@@ -200,22 +234,12 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      * @param item
      * @return
      */
-    private SunburstDonutUnit<T> buildDonutUnit(WeightedTreeItem<T> item){
+    private final SunburstDonutUnit<T> buildDonutUnit2(WeightedTreeItem<T> item){
         SunburstDonutUnit<T> unit = new SunburstDonutUnit(item);
         unit.setStroke(Color.WHITE);
-        layout.getChildren().add(unit);
+        layout.getChildren().add(unit); // TODO when add and remove donuts from view?
         return unit;
     }
-
-    /**
-     * Gets the Color for the given sector
-     * @param sector Index of the sector
-     * @return
-     */
-    private Color sectorColor(int sector){
-       return colors[sector % colors.length];
-    }
-
 
 
 
@@ -234,15 +258,11 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
         private final WeightedTreeItem<T> item;
 
-        private final List<SunburstDonutUnit<T>> children = new ArrayList<>();
-
         public SunburstDonutUnit(WeightedTreeItem<T> item){
             this.item = item;
             Tooltip t = new Tooltip(item.getValue().toString());
             Tooltip.install(this, t);
         }
-
-        public List<SunburstDonutUnit<T>> getChildren(){return children;}
 
         public WeightedTreeItem<T> getItem(){
             return item;
@@ -259,11 +279,11 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      */
     private class SunburstSector<T> {
 
-        private final SunburstDonutUnit<T> unit;
+        private final WeightedTreeItem<T> item;
         private final Color color;
 
-        public SunburstSector(SunburstDonutUnit<T> unit, Color color){
-            this.unit = unit;
+        public SunburstSector(WeightedTreeItem<T> unit, Color color){
+            this.item = unit;
             this.color = color;
         }
 
@@ -275,8 +295,8 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
          * Gets the inner most sector unit
          * @return
          */
-        public SunburstDonutUnit<T> getSectorUnit() {
-            return unit;
+        public WeightedTreeItem<T> getSectorItem() {
+            return item;
         }
     }
 

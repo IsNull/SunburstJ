@@ -19,7 +19,10 @@ public class SunburstView<T> extends Control {
      *                                                                         *
      **************************************************************************/
 
-    private final ObjectProperty<WeightedTreeItem<T>> rootItem = new SimpleObjectProperty<>(this, "rootItem");
+    private final ObjectProperty<WeightedTreeItem<T>> rootItem = new SimpleObjectProperty<>(this, "rootItem", null);
+
+    private final ObjectProperty<WeightedTreeItem<T>> selectedItem = new SimpleObjectProperty<>(this, "selectedItem", null);
+
 
 
     /***************************************************************************
@@ -42,17 +45,32 @@ public class SunburstView<T> extends Control {
      **************************************************************************/
 
     /**
-     * Sets the root node of this view
+     * Sets the root node of this view which makes up the whole data model.
+     * It will set the selected item to this root item as well.
      * @param root
      */
     public void setRootItem(WeightedTreeItem<T> root){
+        setSelectedItem(null);
         rootItem.set(root);
+        setSelectedItem(root);
     }
 
     public WeightedTreeItem<T> getRootItem(){
         return rootItem.get();
     }
 
+    /**
+     * Sets the selected item which becomes the center item (parent) of the inner circle.
+     *
+     * @param root
+     */
+    public void setSelectedItem(WeightedTreeItem<T> root){
+        selectedItem.set(root);
+    }
+
+    public WeightedTreeItem<T> getSelectedItem(){
+        return selectedItem.get();
+    }
 
 
     /***************************************************************************
@@ -63,6 +81,10 @@ public class SunburstView<T> extends Control {
 
     public ObjectProperty<WeightedTreeItem<T>> rootItemProperty(){
         return rootItem;
+    }
+
+    public ObjectProperty<WeightedTreeItem<T>> selectedItemProperty() {
+        return selectedItem;
     }
 
     /***************************************************************************
@@ -82,4 +104,6 @@ public class SunburstView<T> extends Control {
     @Override protected String getUserAgentStylesheet() {
         return SunburstView.class.getResource("sunburstview.css").toExternalForm(); //$NON-NLS-1$
     }
+
+
 }
