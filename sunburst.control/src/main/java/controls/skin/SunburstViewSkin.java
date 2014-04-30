@@ -192,12 +192,23 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
                 // Not root, all have same sector
                 SunburstSector<T> sector = findSector(selectedItemRoot);
                 for (WeightedTreeItem<T> child : selectedItemRoot.getChildrenWeighted()) {
+                    SunburstDonutUnit unit = findOrCreateView(child);
+                    layout.getChildren().add(unit);
                     buildUnitsRecursive(child, sector.getColor());
                 }
             }
         }
     }
 
+    /**
+     * Finds the sector for this item.
+     *
+     * This is achieved by traversing UP the parent references of this item,
+     * until the root item is reached.
+     *
+     * @param item
+     * @return
+     */
     private SunburstSector<T> findSector(WeightedTreeItem<T> item){
 
         WeightedTreeItem<T> root = getSkinnable().getRootItem();
