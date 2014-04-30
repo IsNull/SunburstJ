@@ -48,6 +48,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         getChildren().addAll(layout);
 
         updateRootModel();
+        updateSelectedItem();
     }
 
     /***************************************************************************
@@ -77,8 +78,8 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         WeightedTreeItem<T> currentRoot = getSkinnable().getSelectedItem();
 
         for(WeightedTreeItem<T> innerChild : currentRoot.getChildrenWeighted()){
-            SunburstDonutUnit<T> unit = findOrCreate(innerChild);
-            double sectorAngle = 360d * unit.getItem().getRelativeWeight();
+            SunburstDonutUnit<T> unit = findView(innerChild);
+            double sectorAngle = 360d * innerChild.getRelativeWeight();
 
             unit.setCenterX(centerX);
             unit.setCenterY(centerY);
@@ -91,7 +92,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
             unit.refresh();
 
-            layoutChildrenRecursive(unit.getItem(), centerX, centerY, 1);
+            layoutChildrenRecursive(innerChild, centerX, centerY, 1);
 
             sectorStartDegree += sectorAngle;
         }
@@ -109,13 +110,13 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      */
     private void layoutChildrenRecursive(WeightedTreeItem<T> parentItem, double centerX, double centerY, int level){
 
-        SunburstDonutUnit<T> parentUnit = findOrCreate(parentItem);
+        SunburstDonutUnit<T> parentUnit = findView(parentItem);
         double startDegree = parentUnit.getDegreeStart();
         double fullDegree = parentUnit.getArcAngle();
 
         for(WeightedTreeItem<T> child : parentItem.getChildrenWeighted()){
 
-            SunburstDonutUnit<T> unit = findOrCreate(child);
+            SunburstDonutUnit<T> unit = findView(child);
 
             double angle = fullDegree * unit.getItem().getRelativeWeight();
 
@@ -186,6 +187,8 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         }
     }
 
+
+
     /**
      * Builds the DonutUnits recursively (creates the Nodes) and sets the color
      *
@@ -193,11 +196,11 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      * @param color Primary color tone
      */
     private void buildUnitsRecursive(WeightedTreeItem<T> parentItem, Color color){
-        SunburstDonutUnit<T> parent = findOrCreate(parentItem);
+        SunburstDonutUnit<T> parent = findOrCreateView(parentItem);
 
         parent.setFill(color);
         for(WeightedTreeItem<T> child : parentItem.getChildrenWeighted()){
-            SunburstDonutUnit<T> unit = findOrCreate(child);
+            SunburstDonutUnit<T> unit = findOrCreateView(child);
             unit.setFill(color);
 
             if(!child.isLeaf()){
@@ -213,20 +216,26 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     private void clearLayout(){
         layout.getChildren().clear();
         sectors.clear();
+        donutCache.clear();
     }
 
 
-    private Map<WeightedTreeItem<T>, SunburstDonutUnit<T>> donutCache = new HashMap<>();
+    private final Map<WeightedTreeItem<T>, SunburstDonutUnit<T>> donutCache = new HashMap<>();
 
-    private SunburstDonutUnit<T> findOrCreate(WeightedTreeItem<T> item){
-        SunburstDonutUnit<T> view = donutCache.get(item);
+    private SunburstDonutUnit<T> findOrCreateView(WeightedTreeItem<T> item){
+        SunburstDonutUnit<T> view = findView(item);
 
+        // If we could not find a view for this item, we create one.
         if(view == null){
             view = buildDonutUnit2(item);
             donutCache.put(item, view);
         }
 
         return view;
+    }
+
+    private SunburstDonutUnit<T> findView(WeightedTreeItem<T> item){
+        return donutCache.get(item);
     }
 
     /**
