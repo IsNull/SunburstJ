@@ -240,6 +240,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
     /**
      * Clears the complete layout (all nodes)
+     * This is called when a the root model has changed
      */
     private void clearAll(){
         sectorMap.clear();
@@ -248,7 +249,8 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     }
 
     /**
-     *
+     * Clears the current visible node from the layout.
+     * This is called when the selected node has changed
      */
     private void clearCurrentView(){
         layout.getChildren().clear();
