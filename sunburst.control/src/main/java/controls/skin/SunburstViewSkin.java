@@ -4,9 +4,12 @@ import com.sun.javafx.scene.control.behavior.BehaviorBase;
 import com.sun.javafx.scene.control.behavior.KeyBinding;
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 import controls.sunburst.*;
+import javafx.event.EventHandler;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 import java.util.*;
 
@@ -20,12 +23,14 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     private final Pane layout = new Pane();
     private final Map<WeightedTreeItem<T>, SunburstSector<T>> sectorMap = new HashMap<>();
     private IColorStrategy colorStrategy;
+    private Circle centerCircle;
 
 
     // TODO Make these control / CSS properties
     private double donutWidth = 30;
     private double startRadius = 80;
     private double sectorOffset = donutWidth;
+
 
 
     /***************************************************************************
@@ -46,6 +51,16 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
         getChildren().clear();
         getChildren().addAll(layout);
+
+        // Most inner circle which on click triggers the zoom out navigation.
+        centerCircle = new Circle();
+        centerCircle.setFill(Color.WHITE);
+        centerCircle.setOnMouseClicked(event -> {
+            if(!getSkinnable().getSelectedItem().equals(getSkinnable().getRootItem())){
+                getSkinnable().setSelectedItem((WeightedTreeItem)getSkinnable().getSelectedItem().getParent());
+            }
+        });
+
 
         updateRootModel();
         updateSelectedItem();
@@ -76,6 +91,12 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         double sectorStartDegree = 0;
 
         WeightedTreeItem<T> currentRoot = getSkinnable().getSelectedItem();
+
+        // Set most inner circle properties.
+        centerCircle.setCenterX(centerX);
+        centerCircle.setCenterY(centerY);
+        centerCircle.setRadius(startRadius);
+        layout.getChildren().add(centerCircle);
 
         for(WeightedTreeItem<T> innerChild : currentRoot.getChildrenWeighted()){
             SunburstDonutUnit unit = findView(innerChild);
@@ -136,6 +157,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
             layoutChildrenRecursive(child, centerX, centerY, level + 1);
         }
     }
+
 
     /***************************************************************************
      *                                                                         *
@@ -318,7 +340,14 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
             Tooltip t = new Tooltip(item.getValue().toString());
             Tooltip.install(this, t);
 
-            setOnMouseClicked(value -> getSkinnable().setSelectedItem(item));
+            setOnMouseClicked(event -> {
+                // Check if leaf node was clicked. If so there are no more children to display.
+                if(!item.getChildren().isEmpty()){
+                    getSkinnable().setSelectedItem(item);
+                } else{
+                    System.out.println("Error: There are no children for this DonutUnit");
+                }
+            });
         }
 
         public WeightedTreeItem<T> getItem(){
