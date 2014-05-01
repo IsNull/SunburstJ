@@ -25,7 +25,6 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     private IColorStrategy colorStrategy;
     private Circle centerCircle;
 
-
     // TODO Make these control / CSS properties
     private double donutWidth = 30;
     private double startRadius = 80;
@@ -46,6 +45,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     public SunburstViewSkin(final SunburstView<T> control) {
         super(control, new BehaviorBase<>(control, Collections.<KeyBinding> emptyList()));
         colorStrategy = new ColorStrategyRandom();
+        colorStrategy.colorizeSunburst(getSkinnable().getRootItem());
         control.rootItemProperty().addListener(x -> updateRootModel());
         control.selectedItemProperty().addListener(x -> updateSelectedItem());
 
@@ -186,7 +186,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         int sectorNum = 0;
         for(WeightedTreeItem<T> sectorItem : rootItem.getChildrenWeighted()) {
             // Each sector has its own primary color.
-            Color sectorColor = colorStrategy.getColor();
+            Color sectorColor = colorStrategy.getColor(sectorItem);
             SunburstSector<T> sector = new SunburstSector<>(sectorItem, sectorColor);
             sectorMap.put(sectorItem, sector);
             sectorNum++;
@@ -265,10 +265,10 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      */
     private void buildUnitsRecursive(WeightedTreeItem<T> parentItem, Color color){
         SunburstDonutUnit parent = findOrCreateView(parentItem);
-        parent.setFill(color);
+        parent.setFill(colorStrategy.getColor(parentItem));
         for(WeightedTreeItem<T> child : parentItem.getChildrenWeighted()){
             SunburstDonutUnit unit = findOrCreateView(child);
-            unit.setFill(color);
+            unit.setFill(colorStrategy.getColor(child));
             layout.getChildren().add(unit);
 
             if(!child.isLeaf()){
