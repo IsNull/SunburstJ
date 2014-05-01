@@ -54,12 +54,17 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
         // Most inner circle which on click triggers the zoom out navigation.
         centerCircle = new Circle();
-        centerCircle.setFill(Color.WHITE);
+        // Set id in order to apply CSS styles.
+        centerCircle.setId("centerCircle");
         centerCircle.setOnMouseClicked(event -> {
+            // Check if the root item is reached. If so, further zooming out is impossible.
             if(!getSkinnable().getSelectedItem().equals(getSkinnable().getRootItem())){
                 getSkinnable().setSelectedItem((WeightedTreeItem)getSkinnable().getSelectedItem().getParent());
-            }
+            } else{
+            System.out.println("Error: Can't zoom out; Root item reached.");
+        }
         });
+
 
 
         updateRootModel();
@@ -92,11 +97,10 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
         WeightedTreeItem<T> currentRoot = getSkinnable().getSelectedItem();
 
-        // Set most inner circle properties.
+        // Layout most inner circle.
         centerCircle.setCenterX(centerX);
         centerCircle.setCenterY(centerY);
         centerCircle.setRadius(startRadius);
-        layout.getChildren().add(centerCircle);
 
         for(WeightedTreeItem<T> innerChild : currentRoot.getChildrenWeighted()){
             SunburstDonutUnit unit = findView(innerChild);
@@ -177,6 +181,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
         clearAll();
 
+
         // Create sectors
         int sectorNum = 0;
         for(WeightedTreeItem<T> sectorItem : rootItem.getChildrenWeighted()) {
@@ -199,6 +204,8 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
         WeightedTreeItem<T> rootItem = getSkinnable().getRootItem();
         WeightedTreeItem<T> selectedItemRoot = getSkinnable().getSelectedItem();
+
+        layout.getChildren().add(centerCircle);
 
         if(selectedItemRoot != null && selectedItemRoot != null) {
 
@@ -345,7 +352,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
                 if(!item.getChildren().isEmpty()){
                     getSkinnable().setSelectedItem(item);
                 } else{
-                    System.out.println("Error: There are no children for this DonutUnit");
+                    System.out.println("Error: Can't zoom in; There are no children for this DonutUnit");
                 }
             });
         }
