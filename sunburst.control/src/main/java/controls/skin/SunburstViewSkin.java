@@ -47,6 +47,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         colorStrategy.colorizeSunburst(getSkinnable().getRootItem());
         control.rootItemProperty().addListener(x -> updateRootModel());
         control.selectedItemProperty().addListener(x -> updateSelectedItem());
+        control.colorStrategy().addListener(x -> updateRootModel());
 
         getChildren().clear();
         getChildren().addAll(layout);

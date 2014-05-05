@@ -1,4 +1,6 @@
 import controls.skin.SunburstViewSkin;
+import controls.sunburst.ColorStrategyRandom;
+import controls.sunburst.ColorStrategyShades;
 import controls.sunburst.SunburstView;
 import controls.sunburst.WeightedTreeItem;
 import javafx.event.ActionEvent;
@@ -33,6 +35,9 @@ public class SunburstViewShowcase extends  javafx.application.Application {
 
         SunburstView sunburstView = new SunburstView();
 
+        ColorStrategyRandom colorStrategyRandom = new ColorStrategyRandom();
+        ColorStrategyShades colorStrategyShades = new ColorStrategyShades();
+
         WeightedTreeItem<String> rootData = getData();
 
         for (WeightedTreeItem<String> eatable : rootData.getChildrenWeighted()){
@@ -40,18 +45,22 @@ public class SunburstViewShowcase extends  javafx.application.Application {
         }
 
         sunburstView.setRootItem(rootData);
+        sunburstView.setColorStrategy(colorStrategyShades);
 
-        Button btn = new Button();
-        btn.setText("Change Colors");
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-               // TODO call updateView;
-            }
+        Button btnCSRandom = new Button();
+        btnCSRandom.setText("Random Color Strategy");
+        btnCSRandom.setOnAction(event -> {
+           sunburstView.setColorStrategy(colorStrategyRandom);
         });
 
-        pane.setBottom(btn);
+        Button btnCSShades = new Button();
+        btnCSShades.setText("Shades Color Strategy");
+        btnCSShades.setOnAction(event -> {
+            sunburstView.setColorStrategy(colorStrategyShades);
+        });
+
+        pane.setBottom(btnCSRandom);
+        pane.setTop(btnCSShades);
         pane.setCenter(sunburstView);
 
         stage.setScene(new Scene(pane, 1080, 800));
