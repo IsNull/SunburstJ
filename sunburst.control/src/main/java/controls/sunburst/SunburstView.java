@@ -23,6 +23,8 @@ public class SunburstView<T> extends Control {
 
     private final ObjectProperty<WeightedTreeItem<T>> selectedItem = new SimpleObjectProperty<>(this, "selectedItem", null);
 
+    private final ObjectProperty<IColorStrategy<T>> colorStrategy = new SimpleObjectProperty<>(this, "colorStrategy", new ColorStrategyShades<T>());
+
 
 
     /***************************************************************************
@@ -72,6 +74,15 @@ public class SunburstView<T> extends Control {
         return selectedItem.get();
     }
 
+    /**
+     * Sets the strategy by which the sunburst donut units are colorized.
+     * @return
+     */
+    public IColorStrategy<T> getColorStrategy(){
+        return colorStrategy.get();
+    }
+
+    public void setColorStrategy(IColorStrategy<T> colorStrategy) { this.colorStrategy.set(colorStrategy); }
 
     /***************************************************************************
      *                                                                         *
@@ -85,6 +96,10 @@ public class SunburstView<T> extends Control {
 
     public ObjectProperty<WeightedTreeItem<T>> selectedItemProperty() {
         return selectedItem;
+    }
+
+    public ObjectProperty<IColorStrategy<T>> colorStrategy() {
+        return colorStrategy;
     }
 
     /***************************************************************************
