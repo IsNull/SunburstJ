@@ -4,9 +4,7 @@ import com.sun.javafx.scene.control.behavior.BehaviorBase;
 import com.sun.javafx.scene.control.behavior.KeyBinding;
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 import controls.sunburst.*;
-import javafx.event.EventHandler;
 import javafx.scene.control.Tooltip;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -44,7 +42,8 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      */
     public SunburstViewSkin(final SunburstView<T> control) {
         super(control, new BehaviorBase<>(control, Collections.<KeyBinding> emptyList()));
-        colorStrategy = new ColorStrategyRandom();
+        colorStrategy = new ColorStrategyShades();
+        //colorStrategy = new ColorStrategyRandom();
         colorStrategy.colorizeSunburst(getSkinnable().getRootItem());
         control.rootItemProperty().addListener(x -> updateRootModel());
         control.selectedItemProperty().addListener(x -> updateSelectedItem());
