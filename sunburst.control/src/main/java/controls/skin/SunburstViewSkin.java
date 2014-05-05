@@ -20,6 +20,8 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
     private final Pane layout = new Pane();
     private final Map<WeightedTreeItem<T>, SunburstSector<T>> sectorMap = new HashMap<>();
+    private final Map<WeightedTreeItem<T>, SunburstDonutUnit> donutCache = new HashMap<>();
+
     private IColorStrategy colorStrategy;
     private Circle centerCircle;
 
@@ -61,8 +63,8 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
             if(!getSkinnable().getSelectedItem().equals(getSkinnable().getRootItem())){
                 getSkinnable().setSelectedItem((WeightedTreeItem)getSkinnable().getSelectedItem().getParent());
             } else{
-            System.out.println("Error: Can't zoom out; Root item reached.");
-        }
+                System.out.println("Error: Can't zoom out; Root item reached.");
+            }
         });
 
 
@@ -172,7 +174,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     /**
      * The root model update is responsible for creating the initial sectors and their
      * colors.
-     *
+     * We have to ensure that the current selectedItem matches the new root-model.
      */
     private void updateRootModel(){
 
@@ -181,6 +183,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
         clearAll();
 
+        checkSelectedItem();
 
         // Create sectors
         int sectorNum = 0;
@@ -191,6 +194,8 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
             sectorMap.put(sectorItem, sector);
             sectorNum++;
         }
+
+        updateSelectedItem();
     }
 
     /**
@@ -205,9 +210,9 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         WeightedTreeItem<T> rootItem = getSkinnable().getRootItem();
         WeightedTreeItem<T> selectedItemRoot = getSkinnable().getSelectedItem();
 
-        layout.getChildren().add(centerCircle);
-
         if(selectedItemRoot != null && selectedItemRoot != null) {
+
+            layout.getChildren().add(centerCircle);
 
             if(rootItem.equals(selectedItemRoot)){
                 // Root item
@@ -277,6 +282,22 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         }
     }
 
+    /**
+     * Check if the current selected item matches to the current root item.
+     * If it is inconsistent, we set the selected item to the current root-item.
+     */
+    private void checkSelectedItem(){
+        WeightedTreeItem<T> rootItem = getSkinnable().getRootItem();
+        WeightedTreeItem<T> selectedItemRoot = getSkinnable().getSelectedItem();
+        if(rootItem != null){
+            WeightedTreeItem<T> parent = getRoot(selectedItemRoot);
+            if(parent != null && !rootItem.equals(parent)){
+                // Inconsistent root-model to selected item data model
+                // we need to fix it by clearing the selection
+                getSkinnable().setSelectedItem(rootItem);
+            }
+        }
+    }
 
     /**
      * Clears the complete layout (all nodes)
@@ -297,14 +318,13 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     }
 
 
-    private final Map<WeightedTreeItem<T>, SunburstDonutUnit> donutCache = new HashMap<>();
 
     private SunburstDonutUnit findOrCreateView(WeightedTreeItem<T> item){
         SunburstDonutUnit view = findView(item);
 
         // If we could not find a view for this item, we create one.
         if(view == null){
-            view = buildDonutUnit2(item);
+            view = buildDonutUnit(item);
             donutCache.put(item, view);
         }
 
@@ -320,10 +340,25 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      * @param item
      * @return
      */
-    private final SunburstDonutUnit buildDonutUnit2(WeightedTreeItem<T> item){
+    private final SunburstDonutUnit buildDonutUnit(WeightedTreeItem<T> item){
         SunburstDonutUnit unit = new SunburstDonutUnit(item);
         unit.setStroke(Color.WHITE);
         return unit;
+    }
+
+    /**
+     * Traverses the item hierarchy to find the top most root item.
+     * @param item
+     * @return
+     */
+    private WeightedTreeItem<T> getRoot(WeightedTreeItem<T> item){
+        WeightedTreeItem<T> current = item;
+        if(item != null) {
+            while (current.getParent() != null) {
+                current = (WeightedTreeItem<T>) current.getParent();
+            }
+        }
+        return current;
     }
 
 
