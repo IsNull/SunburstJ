@@ -66,12 +66,7 @@ public class ColorStrategyShades<T> implements IColorStrategy<T> {
             color = colorList.get(r.nextInt(colorList.size()));
             colorList.remove(color);
         } else{
-
-            int rCol1 = r.nextInt(256);
-            int rCol2 = r.nextInt(256);
-            int rCol3 = r.nextInt(256);
-
-            color = Color.rgb(rCol1,rCol2,rCol3);
+            color = ColorHelper.generateRandomColor();
         }
 
         return color;
