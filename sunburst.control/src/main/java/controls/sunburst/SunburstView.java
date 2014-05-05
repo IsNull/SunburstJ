@@ -23,7 +23,7 @@ public class SunburstView<T> extends Control {
 
     private final ObjectProperty<WeightedTreeItem<T>> selectedItem = new SimpleObjectProperty<>(this, "selectedItem", null);
 
-    private final ObjectProperty<IColorStrategy<T>> colorStrategy = new SimpleObjectProperty<>(this, "colorStrategy", new ColorStrategyShades<T>());
+    private final ObjectProperty<IColorStrategy> colorStrategy = new SimpleObjectProperty<>(this, "colorStrategy", new ColorStrategyShades());
 
 
 
@@ -78,11 +78,11 @@ public class SunburstView<T> extends Control {
      * Sets the strategy by which the sunburst donut units are colorized.
      * @return
      */
-    public IColorStrategy<T> getColorStrategy(){
+    public IColorStrategy getColorStrategy(){
         return colorStrategy.get();
     }
 
-    public void setColorStrategy(IColorStrategy<T> colorStrategy) { this.colorStrategy.set(colorStrategy); }
+    public void setColorStrategy(IColorStrategy colorStrategy) { this.colorStrategy.set(colorStrategy); }
 
     /***************************************************************************
      *                                                                         *
@@ -98,7 +98,7 @@ public class SunburstView<T> extends Control {
         return selectedItem;
     }
 
-    public ObjectProperty<IColorStrategy<T>> colorStrategy() {
+    public ObjectProperty<IColorStrategy> colorStrategy() {
         return colorStrategy;
     }
 
@@ -112,7 +112,7 @@ public class SunburstView<T> extends Control {
 
     /** {@inheritDoc} */
     @Override protected Skin<?> createDefaultSkin() {
-        return new SunburstViewSkin<T>(this);
+        return new SunburstViewSkin<>(this);
     }
 
     /** {@inheritDoc} */

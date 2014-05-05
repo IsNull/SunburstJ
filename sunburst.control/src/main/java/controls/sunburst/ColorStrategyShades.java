@@ -9,7 +9,7 @@ import java.util.*;
  * Color scheme which returns a random color.
  * Created by n0daft on 25.04.2014.
  */
-public class ColorStrategyShades<T> implements IColorStrategy<T> {
+public class ColorStrategyShades implements IColorStrategy {
 
     // List that holds main colors.
     private ArrayList<Color> colorList = new ArrayList();
@@ -28,7 +28,7 @@ public class ColorStrategyShades<T> implements IColorStrategy<T> {
     }
 
 
-    public void colorizeSunburst(WeightedTreeItem<T> rootItem){
+    public void colorizeSunburst(WeightedTreeItem<?> rootItem){
         if(rootItem.getParent() != null){
             throw new IllegalArgumentException("Error: Argument must be root item! Current: " + rootItem.toString());
         }
@@ -42,8 +42,8 @@ public class ColorStrategyShades<T> implements IColorStrategy<T> {
         }
     }
 
-    private void colorizeSunburstRecursive(WeightedTreeItem<T> item, int level, Color color){
-        for(WeightedTreeItem<T> child : item.getChildrenWeighted()){
+    private void colorizeSunburstRecursive(WeightedTreeItem<?> item, int level, Color color){
+        for(WeightedTreeItem<?> child : item.getChildrenWeighted()){
             Color colorShade = colorShadeMap.get(color).get(level);
             colorMap.put(child, colorShade);
             if(!child.isLeaf()){
@@ -54,7 +54,7 @@ public class ColorStrategyShades<T> implements IColorStrategy<T> {
     }
 
     @Override
-    public Color getColor(WeightedTreeItem item) {
+    public Color getColor(WeightedTreeItem<?> item) {
         return colorMap.get(item);
     }
 
