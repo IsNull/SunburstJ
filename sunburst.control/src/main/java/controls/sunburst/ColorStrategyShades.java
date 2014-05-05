@@ -36,7 +36,7 @@ public class ColorStrategyShades implements IColorStrategy {
         for(WeightedTreeItem child : rootItem.getChildrenWeighted()){
             Color color = getSectorColor();
             colorMap.put(child, color);
-            ArrayList<Color> colorShades = ColorHelper.getColorShades(color, 20, true);
+            ArrayList<Color> colorShades = ColorHelper.getColorShades(color, 15, true);
             colorShadeMap.put(color, colorShades);
             colorizeSunburstRecursive(child, 1, color);
         }
@@ -66,7 +66,7 @@ public class ColorStrategyShades implements IColorStrategy {
             color = colorList.get(r.nextInt(colorList.size()));
             colorList.remove(color);
         } else{
-            color = ColorHelper.generateRandomColor();
+            color = ColorHelper.generateMixedRandomColor(Color.WHITE);
         }
 
         return color;
