@@ -23,7 +23,7 @@ public class SunburstView<T> extends Control {
 
     private final ObjectProperty<WeightedTreeItem<T>> selectedItem = new SimpleObjectProperty<>(this, "selectedItem", null);
 
-    private final ObjectProperty<IColorStrategy> colorStrategy = new SimpleObjectProperty<>(this, "colorStrategy", new ColorStrategyShades());
+    private final ObjectProperty<IColorStrategy> colorStrategy = new SimpleObjectProperty<>(this, "colorStrategy", new ColorStrategySectorShades());
 
 
 

@@ -1,10 +1,7 @@
-import controls.skin.SunburstViewSkin;
 import controls.sunburst.ColorStrategyRandom;
-import controls.sunburst.ColorStrategyShades;
+import controls.sunburst.ColorStrategySectorShades;
 import controls.sunburst.SunburstView;
 import controls.sunburst.WeightedTreeItem;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -36,7 +33,7 @@ public class SunburstViewShowcase extends  javafx.application.Application {
         SunburstView sunburstView = new SunburstView();
 
         ColorStrategyRandom colorStrategyRandom = new ColorStrategyRandom();
-        ColorStrategyShades colorStrategyShades = new ColorStrategyShades();
+        ColorStrategySectorShades colorStrategyShades = new ColorStrategySectorShades();
 
         WeightedTreeItem<String> rootData = getData();
 
@@ -45,7 +42,6 @@ public class SunburstViewShowcase extends  javafx.application.Application {
         }
 
         sunburstView.setRootItem(rootData);
-        sunburstView.setColorStrategy(colorStrategyShades);
 
         Button btnCSRandom = new Button();
         btnCSRandom.setText("Random Color Strategy");
