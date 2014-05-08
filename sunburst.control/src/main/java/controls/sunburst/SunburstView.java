@@ -25,6 +25,7 @@ public class SunburstView<T> extends Control {
 
     private final ObjectProperty<IColorStrategy> colorStrategy = new SimpleObjectProperty<>(this, "colorStrategy", new ColorStrategySectorShades());
 
+    private final ObjectProperty<Integer> maxDeepness = new SimpleObjectProperty<>(this, "maxDeepness", 8);
 
 
     /***************************************************************************
@@ -63,26 +64,51 @@ public class SunburstView<T> extends Control {
 
     /**
      * Sets the selected item which becomes the center item (parent) of the inner circle.
-     *
+     * By default, the {link #getRootItem} is set as selected item.
      * @param root
      */
     public void setSelectedItem(WeightedTreeItem<T> root){
         selectedItem.set(root);
     }
 
+    /**
+     * Gets the current selected item, which is the item currently in the middle
+     * of the Sunburst.
+     * @return
+     */
     public WeightedTreeItem<T> getSelectedItem(){
         return selectedItem.get();
     }
 
     /**
-     * Sets the strategy by which the sunburst donut units are colorized.
+     * Gets the current strategy by which the sunburst donut units are colorized.
      * @return
      */
     public IColorStrategy getColorStrategy(){
         return colorStrategy.get();
     }
 
+    /**
+     * Sets the strategy by which the sunburst donut units are colorized.
+     * @param colorStrategy
+     */
     public void setColorStrategy(IColorStrategy colorStrategy) { this.colorStrategy.set(colorStrategy); }
+
+    /**
+     * Sets the maximum deepness to which the Sunburst shows the donut units.
+     * @param maxDeepnessValue
+     */
+    public void setMaxDeepness(int maxDeepnessValue){
+        maxDeepness.set(maxDeepnessValue);
+    }
+
+    /**
+     * Returns the maximum deepness
+     * @return
+     */
+    public int getMaxDeepness(){
+        return maxDeepness.get();
+    }
 
     /***************************************************************************
      *                                                                         *
@@ -100,6 +126,10 @@ public class SunburstView<T> extends Control {
 
     public ObjectProperty<IColorStrategy> colorStrategy() {
         return colorStrategy;
+    }
+
+    public ObjectProperty<Integer> maxDeepness() {
+        return maxDeepness;
     }
 
     /***************************************************************************

@@ -22,7 +22,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     private final Map<WeightedTreeItem<T>, SunburstSector<T>> sectorMap = new HashMap<>();
     private final Map<WeightedTreeItem<T>, SunburstDonutUnit> donutCache = new HashMap<>();
 
-    private Circle centerCircle;
+    private final Circle centerCircle;
 
     // TODO Make these control / CSS properties
     private double donutWidth = 30;
@@ -47,6 +47,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         control.rootItemProperty().addListener(x -> updateRootModel());
         control.selectedItemProperty().addListener(x -> updateSelectedItem());
         control.colorStrategy().addListener(x -> updateRootModel());
+        control.maxDeepness().addListener(x -> updateRootModel());
 
         getChildren().clear();
         getChildren().addAll(layout);
@@ -130,6 +131,8 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      * @param level
      */
     private void layoutChildrenRecursive(WeightedTreeItem<T> parentItem, double centerX, double centerY, int level){
+
+        if(getSkinnable().getMaxDeepness() < level) return;
 
         SunburstDonutUnit parentUnit = findView(parentItem);
         double startDegree = parentUnit.getDegreeStart();
@@ -228,11 +231,18 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         }
     }
 
-    private void addUnitView(SunburstDonutUnit unit, int sector, int level){
+    /**
+     * Adds the given Donut to this sunburst.
+     * This will add the Donut-Child to this Controls children.
+     * @param donutView The Donut View
+     * @param sector The sector index in which this Donut is in.
+     * @param level The deepness level where this Donut is shown.
+     */
+    private void addUnitView(SunburstDonutUnit donutView, int sector, int level){
         IColorStrategy colorStrategy = getSkinnable().getColorStrategy();
-        Color color = colorStrategy.colorFor(unit.getItem(), sector, level);
-        unit.setFill(color);
-        layout.getChildren().add(unit);
+        Color color = colorStrategy.colorFor(donutView.getItem(), sector, level);
+        donutView.setFill(color);
+        layout.getChildren().add(donutView);
     }
 
     /**
@@ -243,6 +253,8 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      * @param level
      */
     private void buildUnitsRecursive(WeightedTreeItem<T> parentItem, int sector, int level){
+
+        if(getSkinnable().getMaxDeepness() < level) return;
 
         for(WeightedTreeItem<T> child : parentItem.getChildrenWeighted()){
             SunburstDonutUnit unit = findOrCreateView(child);
@@ -280,8 +292,6 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
         return sector != null ? sectorMap.get(sector) : null;
     }
-
-
 
 
 
@@ -334,6 +344,11 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         return view;
     }
 
+    /**
+     * Finds the view matching to the given model item.
+     * @param item
+     * @return Returns the matching view or NULL if not view was found.
+     */
     private SunburstDonutUnit findView(WeightedTreeItem<T> item){
         return donutCache.get(item);
     }

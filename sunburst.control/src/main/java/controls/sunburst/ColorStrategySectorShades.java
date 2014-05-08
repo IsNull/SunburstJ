@@ -21,12 +21,12 @@ public class ColorStrategySectorShades implements IColorStrategy{
         // We define some nice looking colors for our first few sectors
         sectorColors.add(Color.CORNFLOWERBLUE);
         sectorColors.add(Color.LIGHTGREEN);
+        sectorColors.add(Color.web("98689C")); // Purple
         sectorColors.add(Color.CHOCOLATE);
         sectorColors.add(Color.web("B21217")); // Dark Red
         sectorColors.add(Color.web("E98A2B")); // Orange
         sectorColors.add(Color.web("F6EC46")); // Yellow
         sectorColors.add(Color.web("00A1DB")); // Blue
-        sectorColors.add(Color.web("98689C")); // Purple
         sectorColors.add(Color.web("DF2126")); // Red
 
     }

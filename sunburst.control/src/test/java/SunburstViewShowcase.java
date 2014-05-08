@@ -4,6 +4,7 @@ import controls.sunburst.SunburstView;
 import controls.sunburst.WeightedTreeItem;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -46,6 +47,9 @@ public class SunburstViewShowcase extends  javafx.application.Application {
 
         sunburstView.setRootItem(rootData);
 
+
+        // Example Controls
+
         ToggleButton btnCSRandom = new ToggleButton("Random Color Strategy");
         btnCSRandom.setOnAction(event -> {
            sunburstView.setColorStrategy(colorStrategyRandom);
@@ -56,12 +60,24 @@ public class SunburstViewShowcase extends  javafx.application.Application {
             sunburstView.setColorStrategy(colorStrategyShades);
         });
 
-        HBox toolbar = new HBox(10);
+        Slider slider = new Slider();
+        slider.setMin(0);
+        slider.setMax(10);
+        slider.setValue(sunburstView.getMaxDeepness());
+        slider.setShowTickLabels(true);
+        slider.setShowTickMarks(true);
+        slider.setMajorTickUnit(5);
+        slider.setMinorTickCount(1);
+        slider.setBlockIncrement(1);
+
+        slider.valueProperty().addListener(x -> sunburstView.setMaxDeepness((int)slider.getValue()));
+
+        HBox toolbar = new HBox(20);
         BorderPane.setMargin(toolbar, new Insets(10));
 
         SegmentedButton colorStrategies = new SegmentedButton();
         colorStrategies.getButtons().addAll(btnCSRandom, btnCSShades);
-        toolbar.getChildren().addAll(colorStrategies);
+        toolbar.getChildren().addAll(colorStrategies, slider);
 
         pane.setTop(toolbar);
 
