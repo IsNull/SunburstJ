@@ -2,10 +2,13 @@ import controls.sunburst.ColorStrategyRandom;
 import controls.sunburst.ColorStrategySectorShades;
 import controls.sunburst.SunburstView;
 import controls.sunburst.WeightedTreeItem;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import org.controlsfx.control.SegmentedButton;
 
 /**
  * Created by IsNull on 17.04.14.
@@ -43,20 +46,25 @@ public class SunburstViewShowcase extends  javafx.application.Application {
 
         sunburstView.setRootItem(rootData);
 
-        Button btnCSRandom = new Button();
-        btnCSRandom.setText("Random Color Strategy");
+        ToggleButton btnCSRandom = new ToggleButton("Random Color Strategy");
         btnCSRandom.setOnAction(event -> {
            sunburstView.setColorStrategy(colorStrategyRandom);
         });
 
-        Button btnCSShades = new Button();
-        btnCSShades.setText("Shades Color Strategy");
+        ToggleButton btnCSShades = new ToggleButton("Shades Color Strategy");
         btnCSShades.setOnAction(event -> {
             sunburstView.setColorStrategy(colorStrategyShades);
         });
 
-        pane.setBottom(btnCSRandom);
-        pane.setTop(btnCSShades);
+        HBox toolbar = new HBox(10);
+        BorderPane.setMargin(toolbar, new Insets(10));
+
+        SegmentedButton colorStrategies = new SegmentedButton();
+        colorStrategies.getButtons().addAll(btnCSRandom, btnCSShades);
+        toolbar.getChildren().addAll(colorStrategies);
+
+        pane.setTop(toolbar);
+
         pane.setCenter(sunburstView);
 
         stage.setScene(new Scene(pane, 1080, 800));

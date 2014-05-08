@@ -8,6 +8,15 @@
     <artifactId>sunburst.control</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+
+    <!-- Other Repository sources than maven central  -->
+    <repositories>
+        <repository>
+            <id>sonatype snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
+
     <build>
         <plugins>
             <plugin>
@@ -20,6 +29,14 @@
             </plugin>
         </plugins>
     </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>8.0.6-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 
 </project>
