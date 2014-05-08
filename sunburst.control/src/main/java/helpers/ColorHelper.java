@@ -2,38 +2,12 @@ package helpers;
 
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
  * Created by Eric on 01.05.2014.
  */
 public class ColorHelper {
-
-
-    /**
-     * Returns a list of color shades to the base of the given color.
-     * @param color The color base
-     * @param bands The amount of shades which should be created
-     * @param brighten Specifies if the shades should get brighter or darker
-     * @return
-     */
-    public static ArrayList<Color> getColorShades(Color color, int bands, boolean brighten) {
-
-        ArrayList<Color> colorBands = new ArrayList<>(bands);
-
-        if(brighten){
-            for (int index = 0; index < bands; index++) {
-                colorBands.add(brighten(color, (double) index / (double) bands));
-            }
-        } else {
-            for (int index = 0; index < bands; index++) {
-                colorBands.add(darken(color, (double) index / (double) bands));
-            }
-        }
-
-        return colorBands;
-    }
 
     /**
      * Brightens the given color by the given fraction.
