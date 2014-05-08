@@ -67,10 +67,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
             }
         });
 
-
-
         updateRootModel();
-        updateSelectedItem();
     }
 
     /***************************************************************************
