@@ -43,6 +43,11 @@ public class DonutUnit extends Path {
      **************************************************************************/
 
     public DonutUnit() {
+
+        getStyleClass().add(DEFAULT_STYLE_CLASS);
+
+        // Build the abstract layout of this path
+
         this.getElements().add(moveToPoint1); // Move to Point 1
         this.getElements().add(lineToPoint2); // Draw a Line to Point 2
 
@@ -237,6 +242,13 @@ public class DonutUnit extends Path {
         return (Geometry.calculateAngleClockwise(startAngle, endAngle) <= 360 ) ? true : false;
     }
 
+    /***************************************************************************
+     *                                                                         *
+     * Stylesheet Handling                                                     *
+     *                                                                         *
+     **************************************************************************/
+
+    private static final String DEFAULT_STYLE_CLASS = "donut-unit"; //$NON-NLS-1$
 
 
 }

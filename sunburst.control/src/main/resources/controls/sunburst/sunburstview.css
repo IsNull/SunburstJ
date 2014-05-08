@@ -4,12 +4,12 @@
 }
 
 #centerCircle {
--fx-fill  : #ffffff;
+-fx-fill: transparent;
 }
 
 #centerCircle:hover {
--fx-fill  : rgb(129, 0, 33);
--fx-opacity: 80%;
+-fx-fill: yellow;
+-fx-opacity: 60%;
 
 /*
 -fx-fill  : linear-gradient(from 50% 0% to 50% 100%,
@@ -19,5 +19,11 @@
                                     rgb(129, 0, 33) 100%);
 */
 
--fx-stroke : #ffffff;
+-fx-stroke: transparent;
+}
+
+
+.sunburst-view .donut-unit:hover {
+   /* -fx-opacity: 70%; */
+   -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }

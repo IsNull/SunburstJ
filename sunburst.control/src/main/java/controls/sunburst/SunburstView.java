@@ -38,7 +38,7 @@ public class SunburstView<T> extends Control {
      * Creates a new SunburstView
      */
     public SunburstView(){
-
+        getStyleClass().add(DEFAULT_STYLE_CLASS);
     }
 
     /***************************************************************************
