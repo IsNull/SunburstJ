@@ -29,8 +29,8 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     private final Circle centerCircle;
 
     // TODO Make these control / CSS properties
-    private double donutWidth = 30;
-    private double startRadius = 80;
+    private double donutWidth = 50;
+    private double startRadius = 120;
     private double sectorOffset = donutWidth;
 
 
@@ -386,7 +386,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      */
     private final SunburstDonutUnit buildDonutUnit(WeightedTreeItem<T> item){
         SunburstDonutUnit unit = new SunburstDonutUnit(item);
-        unit.setStroke(Color.WHITE);
+        //unit.setStroke(Color.WHITE);
         return unit;
     }
 
