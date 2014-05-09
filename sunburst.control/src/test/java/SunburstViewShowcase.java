@@ -1,4 +1,6 @@
 import controls.sunburst.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Slider;
@@ -61,6 +63,17 @@ public class SunburstViewShowcase extends  javafx.application.Application {
             sunburstView.setColorStrategy(colorStrategyShades);
         });
 
+        ToggleButton btnShowLegend = new ToggleButton("Show Legend");
+        btnShowLegend.setSelected(true);
+        btnShowLegend.setOnAction(event -> {
+            sunburstView.setLegendVisibility(true);
+        });
+
+        ToggleButton btnHideLegend = new ToggleButton("Hide Legend");
+        btnHideLegend.setOnAction(event -> {
+            sunburstView.setLegendVisibility(false);
+        });
+
         Slider slider = new Slider();
         slider.setMin(0);
         slider.setMax(10);
@@ -78,7 +91,11 @@ public class SunburstViewShowcase extends  javafx.application.Application {
 
         SegmentedButton colorStrategies = new SegmentedButton();
         colorStrategies.getButtons().addAll(btnCSRandom, btnCSShades);
-        toolbar.getChildren().addAll(colorStrategies, slider);
+
+        SegmentedButton legendVisibility = new SegmentedButton();
+        legendVisibility.getButtons().addAll(btnShowLegend, btnHideLegend);
+
+        toolbar.getChildren().addAll(colorStrategies, slider, legendVisibility);
 
         pane.setTop(toolbar);
 

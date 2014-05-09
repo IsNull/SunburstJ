@@ -4,6 +4,8 @@ import com.sun.javafx.scene.control.behavior.BehaviorBase;
 import com.sun.javafx.scene.control.behavior.KeyBinding;
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 import controls.sunburst.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -55,6 +57,17 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         control.selectedItemProperty().addListener(x -> updateSelectedItem());
         control.colorStrategy().addListener(x -> updateRootModel());
         control.maxDeepness().addListener(x -> updateRootModel());
+
+        control.legendVisibility().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if(newValue){
+                    updateLegend();
+                }else{
+                    legend.getChildren().clear();
+                }
+            }
+        });
 
         getChildren().clear();
         getChildren().addAll(rootLayout);
