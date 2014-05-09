@@ -3,6 +3,7 @@ package helpers;
 import controls.sunburst.WeightedTreeItem;
 
 /**
+ * A dummy implementation of mockup data.
  * Created by n0daft on 09.05.2014.
  */
 public class SourceStrategyMockup implements ISourceStrategy {

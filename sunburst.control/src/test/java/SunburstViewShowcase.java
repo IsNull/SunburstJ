@@ -42,16 +42,31 @@ public class SunburstViewShowcase extends  javafx.application.Application {
 
         SunburstView sunburstView = new SunburstView();
 
+        // Create all the available color strategies once to be able to use them at runtime.
         ColorStrategyRandom colorStrategyRandom = new ColorStrategyRandom();
         ColorStrategySectorShades colorStrategyShades = new ColorStrategySectorShades();
 
-        Parameters parameters = getParameters();
-       System.out.println(parameters.toString());
+        WeightedTreeItem<String> rootData;
 
+        // Define a strategy by which the data should be received.
         //ISourceStrategy sourceStrategy = new SourceStrategyMockup();
         ISourceStrategy sourceStrategy = new SourceStrategySQL();
 
-        WeightedTreeItem<String> rootData = sourceStrategy.getData(parameters.getUnnamed().get(0), parameters.getUnnamed().get(1), parameters.getUnnamed().get(2));
+        if(sourceStrategy instanceof SourceStrategySQL){
+            Parameters parameters = getParameters();
+
+            if(parameters.getUnnamed().size() < 3){
+                throw new IllegalArgumentException("In order for this sourceStrategy to succeed, there have to be the following arguments: databasename, user, password");
+            }else{
+                String databasename = parameters.getUnnamed().get(0);
+                String user = parameters.getUnnamed().get(1);
+                String password = parameters.getUnnamed().get(2);
+                rootData = sourceStrategy.getData(databasename, user, password);
+            }
+        }else{
+            rootData = sourceStrategy.getData(null, null, null);
+        }
+
 
         for (WeightedTreeItem<String> eatable : rootData.getChildrenWeighted()){
             System.out.println(eatable.getValue() + ": " + eatable.getRelativeWeight());

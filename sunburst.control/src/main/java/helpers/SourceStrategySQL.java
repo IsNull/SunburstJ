@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * A {@link ISourceStrategy} which makes use of the JDBC driver to get the data from a database.
  * Created by n0daft on 09.05.2014.
  */
 public class SourceStrategySQL implements ISourceStrategy {
@@ -89,6 +90,11 @@ public class SourceStrategySQL implements ISourceStrategy {
     }
 
 
+    /**
+     * Calculates the weights of the individual items of a tree structure
+     * represented by the given item.
+     * @param item
+     */
     private void calculateWeightRecursive(WeightedTreeItem<String> item){
 
         item.setWeight(item.getChildrenWeighted().size());
@@ -105,6 +111,13 @@ public class SourceStrategySQL implements ISourceStrategy {
 
 
     private Map<String, WeightedTreeItem<String>> items = new HashMap<>();
+
+    /**
+     * Searches a tree item by the given name. If it does not exist, it will be
+     * created and added to the cache.
+     * @param itemName
+     * @return
+     */
     private WeightedTreeItem<String> findOrCreate(String itemName){
         WeightedTreeItem<String> item = items.get(itemName);
 
