@@ -59,6 +59,8 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         getChildren().clear();
         getChildren().addAll(rootLayout);
 
+        legend.getStyleClass().add("legend");
+
         // Most inner circle which on click triggers the zoom out navigation.
         centerCircle = new Circle();
         // Set id in order to apply CSS styles.
@@ -394,10 +396,13 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         return current;
     }
 
-    private int LEGENDLEVEL = 2;
     private List<LegendItem> legendItems = new ArrayList<>();
 
-
+    /**
+     * Updates the legend by setting the color and text values of the inner most units.
+     * There will be generated as many LegendItems as needed.
+     * This method is called by the updateSelectedItem method.
+     */
     private void updateLegend(){
 
         WeightedTreeItem<T> currentRoot = getSkinnable().getSelectedItem();
@@ -422,16 +427,8 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
             }
             count++;
         }
-
-
-
-
-
     }
 
-    private void updateLegendRecursive(int level){
-        if(LEGENDLEVEL < level) return;
-    }
 
 
 
