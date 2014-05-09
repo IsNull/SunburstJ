@@ -42,7 +42,7 @@ public class ColorStrategySectorShades implements IColorStrategy{
 
 
     private Color getSectorColor(int sector){
-        while(sectorColors.size() < (sector - 1)){
+        while(sectorColors.size() <= (sector)){
             sectorColors.add(ColorHelper.generateMixedRandomColor(Color.WHITE));
         }
         return sectorColors.get(sector);
