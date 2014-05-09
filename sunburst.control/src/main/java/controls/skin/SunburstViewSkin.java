@@ -5,7 +5,9 @@ import com.sun.javafx.scene.control.behavior.KeyBinding;
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 import controls.sunburst.*;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -14,11 +16,13 @@ import java.util.*;
 /**
  * Skin implementation for {@link SunburstView} Control.
  * The primary responsibility is to create all Nodes (DonutUnit) and
- * layout them in the scene-graph.
+ * sunburst them in the scene-graph.
  */
 public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, BehaviorBase<SunburstView<T>>> {
 
-    private final Pane layout = new Pane();
+    private final BorderPane rootLayout = new BorderPane();
+    private final Pane sunburst = new Pane();
+    private final VBox legend = new VBox();
     private final Map<WeightedTreeItem<T>, SunburstSector<T>> sectorMap = new HashMap<>();
     private final Map<WeightedTreeItem<T>, SunburstDonutUnit> donutCache = new HashMap<>();
 
@@ -44,13 +48,16 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     public SunburstViewSkin(final SunburstView<T> control) {
         super(control, new BehaviorBase<>(control, Collections.<KeyBinding> emptyList()));
 
+        rootLayout.setCenter(sunburst);
+        rootLayout.setRight(legend);
+
         control.rootItemProperty().addListener(x -> updateRootModel());
         control.selectedItemProperty().addListener(x -> updateSelectedItem());
         control.colorStrategy().addListener(x -> updateRootModel());
         control.maxDeepness().addListener(x -> updateRootModel());
 
         getChildren().clear();
-        getChildren().addAll(layout);
+        getChildren().addAll(rootLayout);
 
         // Most inner circle which on click triggers the zoom out navigation.
         centerCircle = new Circle();
@@ -76,8 +83,8 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
     /**
      * Layout all children (all DonutUnits).
-     * This method does the layout for all DonutUnits of the inner most Circle.
-     * Then it uses {#layoutChildrenRecursive} to layout these root Units children
+     * This method does the sunburst for all DonutUnits of the inner most Circle.
+     * Then it uses {#layoutChildrenRecursive} to sunburst these root Units children
      * recursively.
      *
      * @param x pos
@@ -123,9 +130,9 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
     /**
      * Layout the given Donut-Units children.
-     * The parentUnit's layout must already be setup correctly.
+     * The parentUnit's sunburst must already be setup correctly.
      *
-     * @param parentItem The unit of which children should be layout.
+     * @param parentItem The unit of which children should be sunburst.
      * @param centerX
      * @param centerY
      * @param level
@@ -156,7 +163,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
             unit.refresh();
 
-            // Now recourse into to layout this child units children, and so forth..
+            // Now recourse into to sunburst this child units children, and so forth..
             layoutChildrenRecursive(child, centerX, centerY, level + 1);
         }
     }
@@ -209,7 +216,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
         if(selectedItemRoot != null && selectedItemRoot != null) {
 
-            layout.getChildren().add(centerCircle);
+            sunburst.getChildren().add(centerCircle);
 
             if(rootItem.equals(selectedItemRoot)){
                 // Root item
@@ -229,6 +236,8 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
                 }
             }
         }
+
+        updateLegend();
     }
 
     /**
@@ -242,7 +251,12 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         IColorStrategy colorStrategy = getSkinnable().getColorStrategy();
         Color color = colorStrategy.colorFor(donutView.getItem(), sector, level);
         donutView.setFill(color);
-        layout.getChildren().add(donutView);
+        sunburst.getChildren().add(donutView);
+    }
+
+
+    private void addLegendView(SunburstDonutUnit donutView, int sector, int level, Color color){
+
     }
 
     /**
@@ -313,7 +327,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     }
 
     /**
-     * Clears the complete layout (all nodes)
+     * Clears the complete sunburst (all nodes)
      * This is called when a the root model has changed
      */
     private void clearAll(){
@@ -323,11 +337,12 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     }
 
     /**
-     * Clears the current visible node from the layout.
+     * Clears the current visible node from the sunburst.
      * This is called when the selected node has changed
      */
     private void clearCurrentView(){
-        layout.getChildren().clear();
+        legend.getChildren().clear();
+        sunburst.getChildren().clear();
     }
 
 
@@ -377,6 +392,45 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
             }
         }
         return current;
+    }
+
+    private int LEGENDLEVEL = 2;
+    private List<LegendItem> legendItems = new ArrayList<>();
+
+
+    private void updateLegend(){
+
+        WeightedTreeItem<T> currentRoot = getSkinnable().getSelectedItem();
+
+        int count=0;
+        for( WeightedTreeItem<T> innerChild : currentRoot.getChildrenWeighted()){
+
+            String value = (String)innerChild.getValue();
+            Color color = (Color)findView(innerChild).getFill();
+
+            if(count < legendItems.size()){
+
+                LegendItem item = legendItems.get(count);
+                item.setLabelText(value);
+                item.setRectColor(color);
+                legend.getChildren().add(item);
+            }else{
+                LegendItem item = new LegendItem(color, value);
+                legendItems.add(item);
+                legend.getChildren().add(item);
+
+            }
+            count++;
+        }
+
+
+
+
+
+    }
+
+    private void updateLegendRecursive(int level){
+        if(LEGENDLEVEL < level) return;
     }
 
 

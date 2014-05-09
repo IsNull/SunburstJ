@@ -1,15 +1,16 @@
-import controls.sunburst.ColorStrategyRandom;
-import controls.sunburst.ColorStrategySectorShades;
-import controls.sunburst.SunburstView;
-import controls.sunburst.WeightedTreeItem;
+import controls.sunburst.*;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.controlsfx.control.SegmentedButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IsNull on 17.04.14.
