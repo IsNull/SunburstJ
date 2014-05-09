@@ -7,6 +7,6 @@ import controls.sunburst.WeightedTreeItem;
  */
 public interface ISourceStrategy {
 
-    WeightedTreeItem<String> getData();
+    WeightedTreeItem<String> getData(String databaseName, String user, String password);
 
 }

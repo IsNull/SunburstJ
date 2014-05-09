@@ -13,14 +13,14 @@ public class SourceStrategySQL implements ISourceStrategy {
 
     // JDBC driver name and database URL
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    static final String DB_URL = "jdbc:mysql://localhost/cosetest";
+    static final String DB_URL = "jdbc:mysql://localhost/";
 
     //  Database credentials
-    static final String USER = "root";
-    static final String PASS = "root";
+    //static final String USER = "root";
+    //static final String PASS = "root";
 
     @Override
-    public WeightedTreeItem<String> getData() {
+    public WeightedTreeItem<String> getData(String databaseName, String user, String password) {
         WeightedTreeItem<String> root = null;
 
         Connection conn = null;
@@ -30,8 +30,8 @@ public class SourceStrategySQL implements ISourceStrategy {
             Class.forName("com.mysql.jdbc.Driver");
 
             //STEP 3: Open a connection
-            System.out.println("Connecting to database...");
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            System.out.println("Connecting to database " + databaseName);
+            conn = DriverManager.getConnection(DB_URL + databaseName, user, password);
 
             //STEP 4: Execute a query
             System.out.println("Creating statement...");
@@ -87,6 +87,7 @@ public class SourceStrategySQL implements ISourceStrategy {
 
         return root;
     }
+
 
     private void calculateWeightRecursive(WeightedTreeItem<String> item){
 

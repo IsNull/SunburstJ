@@ -7,7 +7,7 @@ import controls.sunburst.WeightedTreeItem;
  */
 public class SourceStrategyMockup implements ISourceStrategy {
     @Override
-    public WeightedTreeItem<String> getData() {
+    public WeightedTreeItem<String> getData(String databaseName, String user, String password) {
         WeightedTreeItem<String> root = new WeightedTreeItem(1, "eatables");
 
         WeightedTreeItem<String> meat = new WeightedTreeItem(3, "meat");

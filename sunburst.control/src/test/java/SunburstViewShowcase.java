@@ -45,10 +45,13 @@ public class SunburstViewShowcase extends  javafx.application.Application {
         ColorStrategyRandom colorStrategyRandom = new ColorStrategyRandom();
         ColorStrategySectorShades colorStrategyShades = new ColorStrategySectorShades();
 
+        Parameters parameters = getParameters();
+       System.out.println(parameters.toString());
+
         //ISourceStrategy sourceStrategy = new SourceStrategyMockup();
         ISourceStrategy sourceStrategy = new SourceStrategySQL();
 
-        WeightedTreeItem<String> rootData = sourceStrategy.getData();
+        WeightedTreeItem<String> rootData = sourceStrategy.getData(parameters.getUnnamed().get(0), parameters.getUnnamed().get(1), parameters.getUnnamed().get(2));
 
         for (WeightedTreeItem<String> eatable : rootData.getChildrenWeighted()){
             System.out.println(eatable.getValue() + ": " + eatable.getRelativeWeight());
