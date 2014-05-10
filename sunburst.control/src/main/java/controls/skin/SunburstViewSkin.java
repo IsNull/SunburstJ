@@ -25,6 +25,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     private final VBox legend = new VBox();
     private final Map<WeightedTreeItem<T>, SunburstSector<T>> sectorMap = new HashMap<>();
     private final Map<WeightedTreeItem<T>, SunburstDonutUnit> donutCache = new HashMap<>();
+    private List<LegendItem> legendItems = new ArrayList<>();
 
     private final Circle centerCircle;
 
@@ -56,14 +57,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         control.colorStrategy().addListener(x -> updateRootModel());
         control.maxDeepness().addListener(x -> updateRootModel());
 
-        control.legendVisibility().addListener((observable, oldValue, newValue) -> {
-                if(newValue){
-                    updateLegend();
-                }else{
-                    legend.getChildren().clear();
-                }
-            }
-        );
+        control.legendVisibility().addListener(x -> updateLegend() );
 
         getChildren().clear();
         getChildren().addAll(rootLayout);
@@ -405,7 +399,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         return current;
     }
 
-    private List<LegendItem> legendItems = new ArrayList<>();
+
 
     /**
      * Updates the legend by setting the color and text values of the inner most units.
@@ -414,27 +408,32 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      */
     private void updateLegend(){
 
-        WeightedTreeItem<T> currentRoot = getSkinnable().getSelectedItem();
+        if(!getSkinnable().getLegendVisibility()){
+            legend.getChildren().clear();
+        }else {
 
-        int count=0;
-        for( WeightedTreeItem<T> innerChild : currentRoot.getChildrenWeighted()){
+            WeightedTreeItem<T> currentRoot = getSkinnable().getSelectedItem();
 
-            String value = (String)innerChild.getValue();
-            Color color = (Color)findView(innerChild).getFill();
+            int count = 0;
+            for (WeightedTreeItem<T> innerChild : currentRoot.getChildrenWeighted()) {
 
-            if(count < legendItems.size()){
+                String value = (String) innerChild.getValue();
+                Color color = (Color) findView(innerChild).getFill();
 
-                LegendItem item = legendItems.get(count);
-                item.setLabelText(value);
-                item.setRectColor(color);
-                legend.getChildren().add(item);
-            }else{
-                LegendItem item = new LegendItem(color, value);
-                legendItems.add(item);
-                legend.getChildren().add(item);
+                if (count < legendItems.size()) {
 
+                    LegendItem item = legendItems.get(count);
+                    item.setLabelText(value);
+                    item.setRectColor(color);
+                    legend.getChildren().add(item);
+                } else {
+                    LegendItem item = new LegendItem(color, value);
+                    legendItems.add(item);
+                    legend.getChildren().add(item);
+
+                }
+                count++;
             }
-            count++;
         }
     }
 
