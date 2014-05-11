@@ -38,7 +38,8 @@ public class SourceStrategySQL implements ISourceStrategy {
             System.out.println("Creating statement...");
             stmt = conn.createStatement();
             String sql;
-            sql = "SELECT * FROM cosetest.temp__2;";
+            //sql = "SELECT * FROM cosetest.temp__2;";
+            sql = "SELECT * FROM cosetest2.map;";
             ResultSet rs = stmt.executeQuery(sql);
 
             boolean first = true;

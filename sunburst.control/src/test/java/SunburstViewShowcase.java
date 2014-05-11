@@ -49,7 +49,7 @@ public class SunburstViewShowcase extends  javafx.application.Application {
         WeightedTreeItem<String> rootData;
 
         // Define a strategy by which the data should be received.
-        ISourceStrategy sourceStrategy = new SourceStrategyMockup();
+       ISourceStrategy sourceStrategy = new SourceStrategyMockup();
         //ISourceStrategy sourceStrategy = new SourceStrategySQL();
 
         if(sourceStrategy instanceof SourceStrategySQL){

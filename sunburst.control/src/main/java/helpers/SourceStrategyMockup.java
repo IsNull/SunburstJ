@@ -9,6 +9,31 @@ import controls.sunburst.WeightedTreeItem;
 public class SourceStrategyMockup implements ISourceStrategy {
     @Override
     public WeightedTreeItem<String> getData(String databaseName, String user, String password) {
+
+        //return testNormal();
+        return testOneElement();
+
+    }
+
+    /**
+     * Only one element
+     * @return
+     */
+    private WeightedTreeItem<String> testOneElement(){
+        WeightedTreeItem<String> root = new WeightedTreeItem<String>(10, "root");
+        WeightedTreeItem<String> child = new WeightedTreeItem<String>(10, "child");
+
+        root.getChildren().add(child);
+
+        return root;
+
+    }
+
+    /**
+     * Normal test data
+     * @return
+     */
+    private WeightedTreeItem<String> testNormal(){
         WeightedTreeItem<String> root = new WeightedTreeItem(1, "eatables");
 
         WeightedTreeItem<String> meat = new WeightedTreeItem(3, "meat");
