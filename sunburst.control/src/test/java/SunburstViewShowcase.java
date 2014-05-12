@@ -1,21 +1,17 @@
-import controls.sunburst.*;
+import controls.sunburst.ColorStrategyRandom;
+import controls.sunburst.ColorStrategySectorShades;
+import controls.sunburst.SunburstView;
+import controls.sunburst.WeightedTreeItem;
 import helpers.ISourceStrategy;
 import helpers.SourceStrategyMockup;
-import helpers.SourceStrategySQL;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.controlsfx.control.SegmentedButton;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by IsNull on 17.04.14.
@@ -46,28 +42,9 @@ public class SunburstViewShowcase extends  javafx.application.Application {
         ColorStrategyRandom colorStrategyRandom = new ColorStrategyRandom();
         ColorStrategySectorShades colorStrategyShades = new ColorStrategySectorShades();
 
-        WeightedTreeItem<String> rootData;
+        WeightedTreeItem<String> rootData = loadData();
 
-        // Define a strategy by which the data should be received.
-       ISourceStrategy sourceStrategy = new SourceStrategyMockup();
-        //ISourceStrategy sourceStrategy = new SourceStrategySQL();
-
-        if(sourceStrategy instanceof SourceStrategySQL){
-            Parameters parameters = getParameters();
-
-            if(parameters.getUnnamed().size() < 3){
-                throw new IllegalArgumentException("In order for this sourceStrategy to succeed, there have to be the following arguments: databasename, user, password");
-            }else{
-                String databasename = parameters.getUnnamed().get(0);
-                String user = parameters.getUnnamed().get(1);
-                String password = parameters.getUnnamed().get(2);
-                rootData = sourceStrategy.getData(databasename, user, password);
-            }
-        }else{
-            rootData = sourceStrategy.getData(null, null, null);
-        }
-
-
+        System.out.println("root children: ");
         for (WeightedTreeItem<String> eatable : rootData.getChildrenWeighted()){
             System.out.println(eatable.getValue() + ": " + eatable.getRelativeWeight());
         }
@@ -127,6 +104,26 @@ public class SunburstViewShowcase extends  javafx.application.Application {
 
         stage.setScene(new Scene(pane, 1080, 800));
         stage.show();
+    }
+
+    private WeightedTreeItem<String> loadData() {
+
+        // Define a strategy by which the data should be received.
+        ISourceStrategy sourceStrategy = new SourceStrategyMockup();
+        //ISourceStrategy sourceStrategy = new SourceStrategySQL();
+
+        String databasename = null;
+        String user = null;
+        String password = null;
+
+        Parameters parameters = getParameters();
+        if (parameters.getUnnamed().size() >= 3) {
+            databasename = parameters.getUnnamed().get(0);
+            user = parameters.getUnnamed().get(1);
+            password = parameters.getUnnamed().get(2);
+        }
+
+        return sourceStrategy.getData(databasename, user, password);
     }
 
     /**
