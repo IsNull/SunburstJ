@@ -1,4 +1,4 @@
-package helpers;
+package data;
 
 import controls.sunburst.WeightedTreeItem;
 
