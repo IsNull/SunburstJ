@@ -1,4 +1,4 @@
-package math;
+package helpers;
 
 /**
  * Geometry math helper methods

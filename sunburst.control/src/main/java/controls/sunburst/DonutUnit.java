@@ -2,7 +2,7 @@ package controls.sunburst;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
-import math.Geometry;
+import helpers.Geometry;
 
 /**
  * Represents a semi ring (A part of a Donut)
