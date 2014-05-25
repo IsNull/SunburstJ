@@ -183,6 +183,19 @@ public class DonutUnit extends Path {
      *  ringWidth: Width of the Donut ring.
      */
     private void updateDonutUnit() {
+
+        double arcAngle = getArcAngle();
+        boolean isLargeArc = arcAngle > 180;
+
+        double degreeStart = this.getDegreeStart();
+        double degreeEnd = this.getDegreeEnd();
+
+        // Fixme >> Hack to draw a full ring
+        if(arcAngle >= 360){
+            degreeEnd = degreeEnd - 0.0001;
+        }
+        // <<
+
         double angleAlpha = degreeStart * (Math.PI / 180);
         double angleAlphaNext = degreeEnd * (Math.PI / 180);
 
@@ -203,9 +216,6 @@ public class DonutUnit extends Path {
         //Point 4, inner start point
         double pointX4 = centerX + innerRadius * Math.sin(angleAlphaNext);
         double pointY4 = centerY - innerRadius * Math.cos(angleAlphaNext);
-
-
-        boolean isLargeArc = getArcAngle() > 180;
 
         moveToPoint1.setX(pointX1); // Move to Point 1
         moveToPoint1.setY(pointY1);
