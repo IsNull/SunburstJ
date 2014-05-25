@@ -75,6 +75,9 @@ public class SunburstViewShowcase extends  javafx.application.Application {
             sunburstView.setLegendVisibility(false);
         });
 
+
+        // Max Level drawn
+
         Slider slider = new Slider();
         slider.setMin(0);
         slider.setMax(10);
@@ -87,6 +90,24 @@ public class SunburstViewShowcase extends  javafx.application.Application {
 
         slider.valueProperty().addListener(x -> sunburstView.setMaxDeepness((int)slider.getValue()));
 
+        // Zoom level
+
+        Slider zoomSlider = new Slider();
+        zoomSlider.setMin(0.1);
+        zoomSlider.setMax(3);
+        zoomSlider.setValue(sunburstView.getScaleX());
+        zoomSlider.setShowTickLabels(true);
+        zoomSlider.setShowTickMarks(true);
+        zoomSlider.setMajorTickUnit(0.5);
+        zoomSlider.setMinorTickCount(1);
+        zoomSlider.setBlockIncrement(0.1);
+
+        zoomSlider.valueProperty().addListener(x -> {
+            double scale = zoomSlider.getValue();
+            sunburstView.setScaleX(scale);
+            sunburstView.setScaleY(scale);
+        });
+
         HBox toolbar = new HBox(20);
         BorderPane.setMargin(toolbar, new Insets(10));
 
@@ -96,7 +117,7 @@ public class SunburstViewShowcase extends  javafx.application.Application {
         SegmentedButton legendVisibility = new SegmentedButton();
         legendVisibility.getButtons().addAll(btnShowLegend, btnHideLegend);
 
-        toolbar.getChildren().addAll(colorStrategies, slider, legendVisibility);
+        toolbar.getChildren().addAll(colorStrategies, slider, legendVisibility, zoomSlider);
 
         pane.setTop(toolbar);
 
