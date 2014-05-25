@@ -380,7 +380,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      */
     private final SunburstDonutUnit buildDonutUnit(WeightedTreeItem<T> item){
         SunburstDonutUnit unit = new SunburstDonutUnit(item);
-        //unit.setStroke(Color.WHITE);
+        unit.setStroke(Color.WHITE);
         return unit;
     }
 
