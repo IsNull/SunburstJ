@@ -10,8 +10,8 @@ public class SourceStrategyMockup implements ISourceStrategy {
     @Override
     public WeightedTreeItem<String> getData(String databaseName, String user, String password) {
 
-        //return testNormal();
-        return testOneElement();
+        return testNormal();
+        //return testOneElement();
 
     }
 
