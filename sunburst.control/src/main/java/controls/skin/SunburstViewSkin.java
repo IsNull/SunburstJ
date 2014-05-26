@@ -25,7 +25,9 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     private final VBox legend = new VBox();
     private final Map<WeightedTreeItem<T>, SunburstSector<T>> sectorMap = new HashMap<>();
     private final Map<WeightedTreeItem<T>, SunburstDonutUnit> donutCache = new HashMap<>();
+    private final int LEGENDITEMSMAX = 20;
     private List<LegendItem> legendItems = new ArrayList<>();
+
 
     private final Circle centerCircle;
 
@@ -399,6 +401,22 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         return current;
     }
 
+    private int getRelativeLevel(WeightedTreeItem<T> item){
+
+        int count = 0;
+        WeightedTreeItem<T> current = item;
+
+        if(item != null) {
+            while (current.getParent() != null) {
+                current = (WeightedTreeItem<T>) current.getParent();
+                count++;
+            }
+        }
+
+        return count;
+
+    }
+
 
 
     /**
@@ -413,26 +431,30 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         }else {
 
             WeightedTreeItem<T> currentRoot = getSkinnable().getSelectedItem();
-
+            getRoot(currentRoot);
             int count = 0;
             for (WeightedTreeItem<T> innerChild : currentRoot.getChildrenWeighted()) {
 
-                String value = (String) innerChild.getValue();
-                Color color = (Color) findView(innerChild).getFill();
+                if(count < LEGENDITEMSMAX){
 
-                if (count < legendItems.size()) {
+                    String value = (String) innerChild.getValue();
+                    Color color = (Color) findView(innerChild).getFill();
 
-                    LegendItem item = legendItems.get(count);
-                    item.setLabelText(value);
-                    item.setRectColor(color);
-                    legend.getChildren().add(item);
-                } else {
-                    LegendItem item = new LegendItem(color, value);
-                    legendItems.add(item);
-                    legend.getChildren().add(item);
+                    if (count < legendItems.size()) {
+
+                        LegendItem item = legendItems.get(count);
+                        item.setLabelText(value);
+                        item.setRectColor(color);
+                        legend.getChildren().add(item);
+                    } else {
+                        LegendItem item = new LegendItem(color, value);
+                        legendItems.add(item);
+                        legend.getChildren().add(item);
+                    }
+                    count++;
 
                 }
-                count++;
+
             }
         }
     }
