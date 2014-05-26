@@ -50,7 +50,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         super(control, new BehaviorBase<>(control, Collections.<KeyBinding> emptyList()));
 
         rootLayout.setCenter(sunburst);
-        //rootLayout.setRight(legend);
+        rootLayout.setRight(legend);
 
         control.rootItemProperty().addListener(x -> updateRootModel());
         control.selectedItemProperty().addListener(x -> updateSelectedItem());

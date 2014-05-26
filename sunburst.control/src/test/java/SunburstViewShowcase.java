@@ -1,7 +1,4 @@
-import controls.sunburst.ColorStrategyRandom;
-import controls.sunburst.ColorStrategySectorShades;
-import controls.sunburst.SunburstView;
-import controls.sunburst.WeightedTreeItem;
+import controls.sunburst.*;
 import data.ISourceStrategy;
 import data.SourceStrategyMockup;
 import javafx.geometry.Insets;
@@ -54,15 +51,23 @@ public class SunburstViewShowcase extends  javafx.application.Application {
 
         // Example Controls
 
+        ToggleButton btnCSShades = new ToggleButton("Shades Color Strategy");
+        btnCSShades.setOnAction(event -> {
+            sunburstView.setColorStrategy(colorStrategyShades);
+        });
+
         ToggleButton btnCSRandom = new ToggleButton("Random Color Strategy");
         btnCSRandom.setOnAction(event -> {
            sunburstView.setColorStrategy(colorStrategyRandom);
         });
 
-        ToggleButton btnCSShades = new ToggleButton("Shades Color Strategy");
-        btnCSShades.setOnAction(event -> {
-            sunburstView.setColorStrategy(colorStrategyShades);
-        });
+        IColorStrategy colorStrategy = sunburstView.getColorStrategy();
+        if(colorStrategy instanceof ColorStrategyRandom){
+            btnCSRandom.setSelected(true);
+        }else if(colorStrategy instanceof  ColorStrategySectorShades){
+            btnCSShades.setSelected(true);
+        }
+
 
         ToggleButton btnShowLegend = new ToggleButton("Show Legend");
         btnShowLegend.setSelected(true);
@@ -112,7 +117,7 @@ public class SunburstViewShowcase extends  javafx.application.Application {
         BorderPane.setMargin(toolbar, new Insets(10));
 
         SegmentedButton colorStrategies = new SegmentedButton();
-        colorStrategies.getButtons().addAll(btnCSRandom, btnCSShades);
+        colorStrategies.getButtons().addAll(btnCSShades, btnCSRandom);
 
         SegmentedButton legendVisibility = new SegmentedButton();
         legendVisibility.getButtons().addAll(btnShowLegend, btnHideLegend);
