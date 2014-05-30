@@ -7,9 +7,12 @@ import controls.sunburst.*;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextBoundsType;
 
 import java.util.*;
 
@@ -28,8 +31,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     private final int LEGENDITEMSMAX = 20;
     private List<LegendItem> legendItems = new ArrayList<>();
 
-
-    private final Circle centerCircle;
+    private final SunburstCenter center;
 
     // TODO Make these control / CSS properties
     private double donutWidth = 50;
@@ -66,18 +68,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
         legend.getStyleClass().add("legend");
 
-        // Most inner circle which on click triggers the zoom out navigation.
-        centerCircle = new Circle();
-        // Set id in order to apply CSS styles.
-        centerCircle.setId("centerCircle");
-        centerCircle.setOnMouseClicked(event -> {
-            // Check if the root item is reached. If so, further zooming out is impossible.
-            if(!getSkinnable().getSelectedItem().equals(getSkinnable().getRootItem())){
-                getSkinnable().setSelectedItem((WeightedTreeItem)getSkinnable().getSelectedItem().getParent());
-            } else{
-                System.out.println("Error: Can't zoom out; Root item reached.");
-            }
-        });
+        center = new SunburstCenter();
 
         updateRootModel();
     }
@@ -99,21 +90,22 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      * @param w width of this control
      * @param h height of this control
      */
-    @Override protected void layoutChildren(double x, double y, double w, double h) {
+    @Override
+    protected void layoutChildren(double x, double y, double w, double h) {
 
-        double centerX = w/2d;
-        double centerY = h/2d;
+        double centerX = w / 2d;
+        double centerY = h / 2d;
 
         double sectorStartDegree = 0;
 
         WeightedTreeItem<T> currentRoot = getSkinnable().getSelectedItem();
 
-        // Layout most inner circle.
-        centerCircle.setCenterX(centerX);
-        centerCircle.setCenterY(centerY);
-        centerCircle.setRadius(startRadius);
+        // Layout most center
+        center.setRadius(startRadius);
+        center.setCenterX(centerX);
+        center.setCenterY(centerY);
 
-        for(WeightedTreeItem<T> innerChild : currentRoot.getChildrenWeighted()){
+        for (WeightedTreeItem<T> innerChild : currentRoot.getChildrenWeighted()) {
             SunburstDonutUnit unit = findView(innerChild);
             double sectorAngle = 360d * innerChild.getRelativeWeight();
 
@@ -221,9 +213,10 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         WeightedTreeItem<T> rootItem = getSkinnable().getRootItem();
         WeightedTreeItem<T> selectedItemRoot = getSkinnable().getSelectedItem();
 
-        if(selectedItemRoot != null && selectedItemRoot != null) {
+        if(selectedItemRoot != null && rootItem != null) {
 
-            sunburst.getChildren().add(centerCircle);
+            sunburst.getChildren().add(center);
+            center.setText(selectedItemRoot.getValue().toString());
 
             if(rootItem.equals(selectedItemRoot)){
                 // Root item
@@ -242,6 +235,8 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
                     buildUnitsRecursive(child, sector.getIndex(), 1);
                 }
             }
+        }else{
+
         }
 
         updateLegend();
@@ -467,6 +462,73 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      * Internal classes                                                        *
      *                                                                         *
      **************************************************************************/
+
+    /**
+     * Represents the center visual.
+     * This is basically a circle with text in the center.
+     */
+    private class SunburstCenter extends StackPane {
+
+        private final Circle centerCircle;
+        private final  Text description;
+
+        public SunburstCenter(){
+
+            // Most inner circle which on click triggers the zoom out navigation.
+            centerCircle = new Circle();
+            centerCircle.setFill(Color.ORANGE);
+            // Set id in order to apply CSS styles.
+            centerCircle.setId("centerCircle");
+            centerCircle.setOnMouseClicked(event -> onAction());
+
+            description = new Text("<Root>");
+            description.setBoundsType(TextBoundsType.VISUAL);
+
+            this.getChildren().addAll(centerCircle, description);
+        }
+
+        /**
+         * Set the center text
+         * @param text
+         */
+        public void setText(String text){
+            this.description.setText(text);
+        }
+
+        /**
+         * Set the circle radius
+         * @param radius
+         */
+        public void setRadius(double radius){
+            centerCircle.setRadius(radius);
+        }
+
+        public double getRadius(){
+            return centerCircle.getRadius();
+        }
+
+        public void setCenterX(double centerX) {
+            setLayoutX(centerX - getRadius());
+        }
+
+        public void setCenterY(double centerY) {
+            setLayoutY(centerY - getRadius());
+        }
+
+
+        private void onAction(){
+            WeightedTreeItem<?> selectedItem = getSkinnable().getSelectedItem();
+            WeightedTreeItem<T> rootItem = getSkinnable().getRootItem();
+            // Check if the root item is reached. If so, further zooming out is impossible.
+            if(!selectedItem.equals(rootItem)){
+                getSkinnable().setSelectedItem((WeightedTreeItem)selectedItem.getParent());
+            } else{
+                System.out.println("Error: Can't zoom out; Root item reached.");
+            }
+        }
+
+
+    }
 
     /**
      * Represents the smallest interactive component of this control,
