@@ -35,8 +35,9 @@ public class SunburstLegend extends VBox {
         this.sunburstView = sunburstView;
 
         sunburstView.selectedItemProperty().addListener(x -> updateLegend());
+        sunburstView.rootItemProperty().addListener(x -> updateLegend());
 
-        updateLegend();
+        //updateLegend();
 
     }
 
@@ -66,6 +67,9 @@ public class SunburstLegend extends VBox {
      * This method is called by the updateSelectedItem method.
      */
     private void updateLegend(){
+
+            this.getChildren().clear();
+
             WeightedTreeItem<?> currentRoot = sunburstView.getSelectedItem();
 
             int count = 0;
@@ -74,7 +78,9 @@ public class SunburstLegend extends VBox {
                 if(count < legendItemMax){
 
                     String value = (String) innerChild.getValue();
+
                     Color color = sunburstView.getItemColor(innerChild);
+                    System.out.println(color);
 
                     if (count < legendItems.size()) {
 
