@@ -4,9 +4,9 @@ import com.sun.javafx.scene.control.behavior.BehaviorBase;
 import com.sun.javafx.scene.control.behavior.KeyBinding;
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 import controls.sunburst.*;
+import javafx.scene.Group;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -24,7 +24,7 @@ import java.util.*;
 public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, BehaviorBase<SunburstView<T>>> {
 
     private final BorderPane rootLayout = new BorderPane();
-    private final Pane sunburst = new Pane();
+    private final Group sunburst = new Group();
     private final VBox legend = new VBox();
     private final Map<WeightedTreeItem<T>, SunburstSector<T>> sectorMap = new HashMap<>();
     private final Map<WeightedTreeItem<T>, SunburstDonutUnit> donutCache = new HashMap<>();
