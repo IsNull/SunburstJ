@@ -41,9 +41,13 @@ public class SunburstLegend extends VBox {
 
         this.getStyleClass().add("legend");
 
+        this.setMinWidth(200);
+
+        sunburstView.skinProperty().addListener(x -> updateLegend());
         sunburstView.selectedItemProperty().addListener(x -> updateLegend());
         sunburstView.rootItemProperty().addListener(x -> updateLegend());
         sunburstView.legendVisibility().addListener(x -> updateLegend());
+        sunburstView.colorStrategy().addListener(x -> updateLegend());
 
         setLegendItemMax(20);
     }
