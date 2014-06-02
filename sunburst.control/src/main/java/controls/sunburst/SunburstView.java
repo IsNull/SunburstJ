@@ -5,6 +5,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
+import javafx.scene.paint.Color;
 
 /**
  * A Sunburst View visualizes weighted hierarchical data structures.
@@ -124,6 +125,23 @@ public class SunburstView<T> extends Control {
      */
     public void setLegendVisibility(boolean visible) { legendVisibility.set(visible); }
 
+    /**
+     * Returns the color of the given item.
+     * @param item The item for which the color should be returned
+     * @return
+     */
+    public Color getItemColor(WeightedTreeItem<T> item) {
+
+        Skin<?> skin = this.getSkin();
+        Color color = null;
+        if(skin instanceof SunburstViewSkin){
+           color =((SunburstViewSkin) skin).getItemColor(item);
+        }
+
+        return color;
+
+    }
+
     /***************************************************************************
      *                                                                         *
      * Properties                                                              *
@@ -165,6 +183,5 @@ public class SunburstView<T> extends Control {
     @Override protected String getUserAgentStylesheet() {
         return SunburstView.class.getResource("sunburstview.css").toExternalForm(); //$NON-NLS-1$
     }
-
 
 }

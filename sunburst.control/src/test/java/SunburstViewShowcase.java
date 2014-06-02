@@ -1,3 +1,4 @@
+import controls.skin.SunburstViewSkin;
 import controls.sunburst.*;
 import data.ISourceStrategy;
 import data.SourceStrategyMockup;
@@ -127,6 +128,7 @@ public class SunburstViewShowcase extends  javafx.application.Application {
         pane.setTop(toolbar);
 
         pane.setCenter(sunburstView);
+        pane.setRight(new SunburstLegend(sunburstView));
 
         stage.setScene(new Scene(pane, 1080, 800));
         stage.show();

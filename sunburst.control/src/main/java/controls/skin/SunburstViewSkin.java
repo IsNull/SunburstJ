@@ -126,7 +126,6 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         }
     }
 
-
     /**
      * Layout the given Donut-Units children.
      * The parentUnit's sunburst must already be setup correctly.
@@ -165,6 +164,22 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
             // Now recourse into to sunburst this child units children, and so forth..
             layoutChildrenRecursive(child, centerX, centerY, level + 1);
         }
+    }
+
+
+    /***************************************************************************
+     *                                                                         *
+     * Public API                                                              *
+     *                                                                         *
+     **************************************************************************/
+
+    /**
+     * Returns the color of the given item.
+     * @param item The item for which the color should be returned
+     * @return
+     */
+    public Color getItemColor(WeightedTreeItem<T> item){
+        return (Color) findView(item).getFill();
     }
 
 
@@ -412,8 +427,6 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
     }
 
-
-
     /**
      * Updates the legend by setting the color and text values of the inner most units.
      * There will be generated as many LegendItems as needed.
@@ -433,7 +446,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
                 if(count < LEGENDITEMSMAX){
 
                     String value = (String) innerChild.getValue();
-                    Color color = (Color) findView(innerChild).getFill();
+                    Color color = getItemColor(innerChild);
 
                     if (count < legendItems.size()) {
 
