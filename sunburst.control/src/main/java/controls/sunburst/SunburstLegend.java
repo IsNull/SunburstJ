@@ -21,7 +21,7 @@ public class SunburstLegend extends VBox {
 
     private final SunburstView<?> sunburstView;
 
-    private final List<LegendItem> legendItems = new ArrayList<>();
+    //private final List<LegendItem> legendItems = new ArrayList<>();
 
     private int legendItemMax;
 
@@ -89,39 +89,22 @@ public class SunburstLegend extends VBox {
      */
     private void updateLegend() {
 
-        if (!sunburstView.getLegendVisibility()) {
-            clearLegend();
-        } else {
+        clearLegend();
 
-            clearLegend();
+        WeightedTreeItem<?> currentRoot = sunburstView.getSelectedItem();
+        int count = 0;
+        for (WeightedTreeItem innerChild : currentRoot.getChildrenWeighted()) {
 
-            WeightedTreeItem<?> currentRoot = sunburstView.getSelectedItem();
+            if (count > legendItemMax) break;
 
-            int count = 0;
-            for (WeightedTreeItem innerChild : currentRoot.getChildrenWeighted()) {
+            String value = innerChild.getValue().toString(); // TODO better string / description handling
+            Color color = sunburstView.getItemColor(innerChild);
+            System.out.println("Color for " + innerChild + " is: " + color);
 
-                if (count < legendItemMax) {
+            LegendItem item = new LegendItem(color, value);;
 
-                    String value = (String) innerChild.getValue();
-
-                    Color color = sunburstView.getItemColor(innerChild);
-                    System.out.println(color);
-
-                    if (count < legendItems.size()) {
-
-                        LegendItem item = legendItems.get(count);
-                        item.setLabelText(value);
-                        item.setRectColor(color);
-                        this.getChildren().add(item);
-                    } else {
-                        LegendItem item = new LegendItem(color, value);
-                        legendItems.add(item);
-                        this.getChildren().add(item);
-                    }
-                    count++;
-
-                }
-            }
+            this.getChildren().add(item);
+            count++;
         }
     }
 }
