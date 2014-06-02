@@ -6,9 +6,7 @@ import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
 import controls.sunburst.*;
 import javafx.scene.Group;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -23,13 +21,10 @@ import java.util.*;
  */
 public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, BehaviorBase<SunburstView<T>>> {
 
-    private final BorderPane rootLayout = new BorderPane();
+    //private final BorderPane rootLayout = new BorderPane();
     private final Group sunburst = new Group();
-    private final VBox legend = new VBox();
     private final Map<WeightedTreeItem<T>, SunburstSector<T>> sectorMap = new HashMap<>();
     private final Map<WeightedTreeItem<T>, SunburstDonutUnit> donutCache = new HashMap<>();
-    private final int LEGENDITEMSMAX = 20;
-    private List<LegendItem> legendItems = new ArrayList<>();
 
     private final SunburstCenter center;
 
@@ -53,8 +48,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
     public SunburstViewSkin(final SunburstView<T> control) {
         super(control, new BehaviorBase<>(control, Collections.<KeyBinding> emptyList()));
 
-        rootLayout.setCenter(sunburst);
-        rootLayout.setRight(legend);
+
 
         control.rootItemProperty().addListener(x -> updateRootModel());
         control.selectedItemProperty().addListener(x -> updateSelectedItem());
@@ -62,9 +56,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         control.maxDeepness().addListener(x -> updateRootModel());
 
         getChildren().clear();
-        getChildren().addAll(rootLayout);
-
-        legend.getStyleClass().add("legend");
+        getChildren().addAll(sunburst);
 
         center = new SunburstCenter();
 
@@ -355,7 +347,6 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      * This is called when the selected node has changed
      */
     private void clearCurrentView(){
-        legend.getChildren().clear();
         sunburst.getChildren().clear();
     }
 
