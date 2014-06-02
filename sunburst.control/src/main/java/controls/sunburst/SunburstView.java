@@ -1,8 +1,11 @@
 package controls.sunburst;
 
+import com.sun.javafx.event.EventHandlerManager;
 import controls.skin.SunburstViewSkin;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.*;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.paint.Color;
@@ -19,6 +22,8 @@ public class SunburstView<T> extends Control {
      * Private fields                                                          *
      *                                                                         *
      **************************************************************************/
+
+    private final EventHandlerManager eventHandlerManager = new EventHandlerManager(this);
 
     private final ObjectProperty<WeightedTreeItem<T>> rootItem = new SimpleObjectProperty<>(this, "rootItem", null);
 
@@ -44,9 +49,70 @@ public class SunburstView<T> extends Control {
 
     /***************************************************************************
      *                                                                         *
+     * Events                                                                  *
+     *                                                                         *
+     **************************************************************************/
+
+
+    // --- onVisualChanged
+
+    /**
+     * Represents an Event which is fired when the visual has changed.
+     */
+    @SuppressWarnings("serial")
+    public static class VisualChangedEvent extends Event {
+
+
+        @SuppressWarnings("rawtypes")
+        public static final EventType<VisualChangedEvent> VISUAL_CHANGED =
+                new EventType<>("VISUAL_CHANGED"); //$NON-NLS-1$
+        /**
+         * Creates a new event that can subsequently be fired.
+         */
+        public VisualChangedEvent() {
+            super(VISUAL_CHANGED);
+        }
+    }
+
+    /**
+     * Callback property when the visual has changed
+     */
+    public final ObjectProperty<EventHandler<VisualChangedEvent>> onVisualChangedProperty() {
+        return onVisualChanged;
+    }
+    public final void setOnVisualChanged(EventHandler<VisualChangedEvent> value) {
+        onVisualChangedProperty().set(value);
+    }
+    public final EventHandler<VisualChangedEvent> getOnVisualChanged() {
+        return onVisualChangedProperty().get();
+    }
+    private ObjectProperty<EventHandler<VisualChangedEvent>> onVisualChanged = new ObjectPropertyBase<EventHandler<VisualChangedEvent>>() {
+        @SuppressWarnings("rawtypes")
+        @Override protected void invalidated() {
+            eventHandlerManager.setEventHandler(VisualChangedEvent.VISUAL_CHANGED, get());
+        }
+
+        @Override
+        public Object getBean() {
+            return SunburstView.this;
+        }
+
+        @Override
+        public String getName() {
+            return "onVisualChanged"; //$NON-NLS-1$
+        }
+    };
+
+    /***************************************************************************
+     *                                                                         *
      * Public API                                                              *
      *                                                                         *
      **************************************************************************/
+
+    /** {@inheritDoc} */
+    @Override public EventDispatchChain buildEventDispatchChain(EventDispatchChain tail) {
+        return tail.prepend(eventHandlerManager);
+    }
 
     /**
      * Sets the root node of this view which makes up the whole data model.

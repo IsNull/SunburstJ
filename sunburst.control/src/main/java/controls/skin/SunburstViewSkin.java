@@ -3,7 +3,11 @@ package controls.skin;
 import com.sun.javafx.scene.control.behavior.BehaviorBase;
 import com.sun.javafx.scene.control.behavior.KeyBinding;
 import com.sun.javafx.scene.control.skin.BehaviorSkinBase;
-import controls.sunburst.*;
+import controls.sunburst.DonutUnit;
+import controls.sunburst.IColorStrategy;
+import controls.sunburst.SunburstView;
+import controls.sunburst.WeightedTreeItem;
+import javafx.event.Event;
 import javafx.scene.Group;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.StackPane;
@@ -12,7 +16,9 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextBoundsType;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Skin implementation for {@link SunburstView} Control.
@@ -245,6 +251,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
         }
 
+        Event.fireEvent(getSkinnable(), new SunburstView.VisualChangedEvent());
     }
 
     /**
