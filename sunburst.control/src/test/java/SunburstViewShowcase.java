@@ -131,6 +131,7 @@ public class SunburstViewShowcase extends  javafx.application.Application {
         BorderPane.setAlignment(sunburstView, Pos.CENTER);
         SunburstLegend myLegend = new SunburstLegend(sunburstView);
         pane.setRight(myLegend);
+        BorderPane.setMargin(myLegend, new Insets(20));
         BorderPane.setAlignment(myLegend, Pos.CENTER_LEFT);
 
         stage.setScene(new Scene(pane, 1080, 800));
