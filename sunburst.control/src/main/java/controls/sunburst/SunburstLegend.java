@@ -1,7 +1,6 @@
 package controls.sunburst;
 
-import controls.skin.SunburstViewSkin;
-import javafx.scene.layout.Pane;
+import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -37,14 +36,15 @@ public class SunburstLegend extends VBox {
 
     public SunburstLegend(SunburstView sunburstView) {
         this.sunburstView = sunburstView;
+        this.setAlignment(Pos.CENTER);
 
         sunburstView.selectedItemProperty().addListener(x -> updateLegend());
         sunburstView.rootItemProperty().addListener(x -> updateLegend());
         sunburstView.legendVisibility().addListener(x -> updateLegend());
 
-        //updateLegend();
-
     }
+
+
 
     /**
      * ************************************************************************
@@ -63,7 +63,7 @@ public class SunburstLegend extends VBox {
     }
 
     /**
-     * Clears the content of the legend
+     * Clears the content of the legend.
      */
     public void clearLegend() {
         this.getChildren().clear();
