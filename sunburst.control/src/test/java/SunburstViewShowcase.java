@@ -1,6 +1,8 @@
 import controls.sunburst.*;
 import data.ISourceStrategy;
 import data.SourceStrategyMockup;
+import data.SourceStrategySQL;
+import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -48,6 +50,7 @@ public class SunburstViewShowcase extends  javafx.application.Application {
         }
 
         sunburstView.setRootItem(rootData);
+        sunburstView.setColorStrategy(colorStrategyShades);
 
 
         // Example Controls
@@ -136,6 +139,8 @@ public class SunburstViewShowcase extends  javafx.application.Application {
 
         stage.setScene(new Scene(pane, 1080, 800));
         stage.show();
+
+        Event.fireEvent(sunburstView, new SunburstView.VisualChangedEvent());
     }
 
     private WeightedTreeItem<String> loadData() {

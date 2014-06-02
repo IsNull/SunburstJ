@@ -47,6 +47,8 @@ public class SunburstView<T> extends Control {
         getStyleClass().add(DEFAULT_STYLE_CLASS);
     }
 
+
+
     /***************************************************************************
      *                                                                         *
      * Events                                                                  *
@@ -186,9 +188,10 @@ public class SunburstView<T> extends Control {
     public Color getItemColor(WeightedTreeItem<T> item) {
 
         Skin<?> skin = this.getSkin();
+        //System.out.println(skin);
         Color color = null;
         if(skin instanceof SunburstViewSkin){
-            System.out.println("is SunburstViewSkin");
+           //System.out.println("is SunburstViewSkin");
            color =((SunburstViewSkin) skin).getItemColor(item);
         }
 

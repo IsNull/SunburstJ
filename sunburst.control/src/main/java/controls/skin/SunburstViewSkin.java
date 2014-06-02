@@ -251,6 +251,7 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
         }
 
+        // Fire event to notify the legend that the units are built and their colors are set.
         Event.fireEvent(getSkinnable(), new SunburstView.VisualChangedEvent());
     }
 
