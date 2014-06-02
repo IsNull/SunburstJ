@@ -28,8 +28,6 @@ public class SunburstView<T> extends Control {
 
     private final ObjectProperty<Integer> maxDeepness = new SimpleObjectProperty<>(this, "maxDeepness", 8);
 
-    private final ObjectProperty<Boolean> legendVisibility = new SimpleObjectProperty<>(this, "legendVisibility", true);
-
 
     /***************************************************************************
      *                                                                         *
@@ -113,17 +111,6 @@ public class SunburstView<T> extends Control {
         return maxDeepness.get();
     }
 
-    /**
-     * Returns the visibility state of the legend represented by a boolean.
-     * @return
-     */
-    public boolean getLegendVisibility() {return legendVisibility.get(); }
-
-    /**
-     * Sets the visibility state of the legend.
-     * @param visible
-     */
-    public void setLegendVisibility(boolean visible) { legendVisibility.set(visible); }
 
     /**
      * Returns the color of the given item.
@@ -164,8 +151,6 @@ public class SunburstView<T> extends Control {
     public ObjectProperty<Integer> maxDeepness() {
         return maxDeepness;
     }
-
-    public ObjectProperty<Boolean> legendVisibility() { return legendVisibility; }
 
     /***************************************************************************
      *                                                                         *
