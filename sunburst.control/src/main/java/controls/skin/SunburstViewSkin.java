@@ -169,7 +169,8 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
      * @return
      */
     public Color getItemColor(WeightedTreeItem<T> item){
-        return (Color) findView(item).getFill();
+        SunburstDonutUnit view = findView(item);
+        return view != null ? (Color) view.getFill() : null;
     }
 
 
