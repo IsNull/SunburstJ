@@ -34,6 +34,8 @@ public class SunburstLegend extends VBox {
     public SunburstLegend(SunburstView sunburstView){
         this.sunburstView = sunburstView;
 
+        sunburstView.selectedItemProperty().addListener(x -> updateLegend());
+
         updateLegend();
 
     }
