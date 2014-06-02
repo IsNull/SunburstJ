@@ -13,11 +13,13 @@ import java.util.List;
  */
 public class SunburstLegend extends VBox {
 
-    /***************************************************************************
-     *                                                                         *
+    /**
+     * ************************************************************************
+     * *
      * Private fields                                                          *
-     *                                                                         *
-     **************************************************************************/
+     * *
+     * ************************************************************************
+     */
 
     private SunburstView<?> sunburstView;
 
@@ -25,27 +27,32 @@ public class SunburstLegend extends VBox {
 
     private int legendItemMax = 20;
 
-    /***************************************************************************
-     *                                                                         *
+    /**
+     * ************************************************************************
+     * *
      * Constructors                                                            *
-     *                                                                         *
-     **************************************************************************/
+     * *
+     * ************************************************************************
+     */
 
-    public SunburstLegend(SunburstView sunburstView){
+    public SunburstLegend(SunburstView sunburstView) {
         this.sunburstView = sunburstView;
 
         sunburstView.selectedItemProperty().addListener(x -> updateLegend());
         sunburstView.rootItemProperty().addListener(x -> updateLegend());
+        sunburstView.legendVisibility().addListener(x -> updateLegend());
 
         //updateLegend();
 
     }
 
-    /***************************************************************************
-     *                                                                         *
+    /**
+     * ************************************************************************
+     * *
      * Public API                                                              *
-     *                                                                         *
-     **************************************************************************/
+     * *
+     * ************************************************************************
+     */
 
     public int getLegendItemMax() {
         return legendItemMax;
@@ -54,6 +61,14 @@ public class SunburstLegend extends VBox {
     public void setLegendItemMax(int legendItemMax) {
         this.legendItemMax = legendItemMax;
     }
+
+    /**
+     * Clears the content of the legend
+     */
+    public void clearLegend() {
+        this.getChildren().clear();
+    }
+
 
     /***************************************************************************
      *                                                                         *
@@ -66,16 +81,20 @@ public class SunburstLegend extends VBox {
      * There will be generated as many LegendItems as needed.
      * This method is called by the updateSelectedItem method.
      */
-    private void updateLegend(){
+    private void updateLegend() {
 
-            this.getChildren().clear();
+        if (!sunburstView.getLegendVisibility()) {
+            clearLegend();
+        } else {
+
+            clearLegend();
 
             WeightedTreeItem<?> currentRoot = sunburstView.getSelectedItem();
 
             int count = 0;
             for (WeightedTreeItem innerChild : currentRoot.getChildrenWeighted()) {
 
-                if(count < legendItemMax){
+                if (count < legendItemMax) {
 
                     String value = (String) innerChild.getValue();
 
@@ -96,6 +115,7 @@ public class SunburstLegend extends VBox {
                     count++;
 
                 }
+            }
         }
     }
 }

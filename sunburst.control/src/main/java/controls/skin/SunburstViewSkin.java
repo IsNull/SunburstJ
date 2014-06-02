@@ -61,8 +61,6 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         control.colorStrategy().addListener(x -> updateRootModel());
         control.maxDeepness().addListener(x -> updateRootModel());
 
-        control.legendVisibility().addListener(x -> updateLegend() );
-
         getChildren().clear();
         getChildren().addAll(rootLayout);
 
@@ -254,7 +252,6 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
 
         }
 
-        updateLegend();
     }
 
     /**
@@ -426,48 +423,6 @@ public class SunburstViewSkin<T> extends BehaviorSkinBase<SunburstView<T>, Behav
         return count;
 
     }
-
-    /**
-     * Updates the legend by setting the color and text values of the inner most units.
-     * There will be generated as many LegendItems as needed.
-     * This method is called by the updateSelectedItem method.
-     */
-    private void updateLegend(){
-
-        if(!getSkinnable().getLegendVisibility()){
-            legend.getChildren().clear();
-        }else {
-
-            WeightedTreeItem<T> currentRoot = getSkinnable().getSelectedItem();
-            getRoot(currentRoot);
-            int count = 0;
-            for (WeightedTreeItem<T> innerChild : currentRoot.getChildrenWeighted()) {
-
-                if(count < LEGENDITEMSMAX){
-
-                    String value = (String) innerChild.getValue();
-                    Color color = getItemColor(innerChild);
-
-                    if (count < legendItems.size()) {
-
-                        LegendItem item = legendItems.get(count);
-                        item.setLabelText(value);
-                        item.setRectColor(color);
-                        legend.getChildren().add(item);
-                    } else {
-                        LegendItem item = new LegendItem(color, value);
-                        legendItems.add(item);
-                        legend.getChildren().add(item);
-                    }
-                    count++;
-
-                }
-
-            }
-        }
-    }
-
-
 
 
     /***************************************************************************
