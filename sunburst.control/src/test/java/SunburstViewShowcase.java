@@ -73,12 +73,12 @@ public class SunburstViewShowcase extends  javafx.application.Application {
         ToggleButton btnShowLegend = new ToggleButton("Show Legend");
         btnShowLegend.setSelected(true);
         btnShowLegend.setOnAction(event -> {
-            sunburstView.setLegendVisibility(true);
+            //sunburstView.setLegendVisibility(true);
         });
 
         ToggleButton btnHideLegend = new ToggleButton("Hide Legend");
         btnHideLegend.setOnAction(event -> {
-            sunburstView.setLegendVisibility(false);
+            //sunburstView.setLegendVisibility(false);
         });
 
 
