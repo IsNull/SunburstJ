@@ -1,8 +1,8 @@
-import controls.skin.SunburstViewSkin;
 import controls.sunburst.*;
 import data.ISourceStrategy;
 import data.SourceStrategyMockup;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
@@ -128,6 +128,7 @@ public class SunburstViewShowcase extends  javafx.application.Application {
         pane.setTop(toolbar);
 
         pane.setCenter(sunburstView);
+        BorderPane.setAlignment(sunburstView, Pos.CENTER);
         pane.setRight(new SunburstLegend(sunburstView));
 
         stage.setScene(new Scene(pane, 1080, 800));
