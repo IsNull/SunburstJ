@@ -8,32 +8,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by n0daft on 02.06.2014.
+ * Represents the legend visual for a sunburst view.
+ *
  */
 public class SunburstLegend extends VBox {
 
-    /**
-     * ************************************************************************
-     * *
+    /***************************************************************************
+     *                                                                         *
      * Private fields                                                          *
-     * *
-     * ************************************************************************
-     */
+     *                                                                         *
+     **************************************************************************/
 
-    private SunburstView<?> sunburstView;
+    private final SunburstView<?> sunburstView;
 
-    private List<LegendItem> legendItems = new ArrayList<>();
+    private final List<LegendItem> legendItems = new ArrayList<>();
 
-    private int legendItemMax = 20;
+    private int legendItemMax;
+
+    /***************************************************************************
+     *                                                                         *
+     * Constructor                                                             *
+     *                                                                         *
+     **************************************************************************/
 
     /**
-     * ************************************************************************
-     * *
-     * Constructors                                                            *
-     * *
-     * ************************************************************************
+     * Creates a new SunburstLegend for the given SunburstView
+     * @param sunburstView
      */
-
     public SunburstLegend(SunburstView sunburstView) {
         this.sunburstView = sunburstView;
         this.setAlignment(Pos.CENTER);
@@ -42,17 +43,16 @@ public class SunburstLegend extends VBox {
         sunburstView.rootItemProperty().addListener(x -> updateLegend());
         sunburstView.legendVisibility().addListener(x -> updateLegend());
 
+        setLegendItemMax(20);
     }
 
 
 
-    /**
-     * ************************************************************************
-     * *
+    /***************************************************************************
+     *                                                                         *
      * Public API                                                              *
-     * *
-     * ************************************************************************
-     */
+     *                                                                         *
+     **************************************************************************/
 
     public int getLegendItemMax() {
         return legendItemMax;
