@@ -21,8 +21,6 @@ public class SunburstLegend extends VBox {
 
     private final SunburstView<?> sunburstView;
 
-    //private final List<LegendItem> legendItems = new ArrayList<>();
-
     private int legendItemMax;
 
     /***************************************************************************
