@@ -19,13 +19,12 @@ public class LegendItem extends HBox{
         this.label = new Label(text);
 
         this.rect = new Rectangle();
-        this.rect.setHeight(10);
+        this.rect.setHeight(15);
         this.rect.setWidth(10);
         this.rect.setFill(color);
 
         getChildren().add(rect);
         getChildren().add(label);
-
 
         this.getStyleClass().add("legend-item");
     }
