@@ -249,7 +249,7 @@ public class DonutUnit extends Path {
      * @return
      */
     private boolean checkAngle(double startAngle, double endAngle){
-        return (Geometry.calculateAngleClockwise(startAngle, endAngle) <= 360 ) ? true : false;
+        return Geometry.calculateAngleClockwise(startAngle, endAngle) <= 360;
     }
 
     /***************************************************************************
