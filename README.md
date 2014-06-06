@@ -1,7 +1,7 @@
 SunburstJ
 =========
 
-A Sunburst-Control for Java.
+A Sunburst-Control for JavaFX 8.
 
 The source code is freely available under the terms of MIT Licence: https://github.com/IsNull/SunburstJ
 
