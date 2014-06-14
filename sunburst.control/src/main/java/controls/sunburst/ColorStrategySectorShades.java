@@ -12,10 +12,24 @@ import java.util.List;
  */
 public class ColorStrategySectorShades implements IColorStrategy{
 
-    private final List<Color> sectorColors = new ArrayList<>();
+    /***************************************************************************
+     *                                                                         *
+     * Private fields                                                          *
+     *                                                                         *
+     **************************************************************************/
 
+    private final List<Color> sectorColors = new ArrayList<>();
     private final double maxShades = 8;
 
+    /***************************************************************************
+     *                                                                         *
+     * Constructor                                                             *
+     *                                                                         *
+     **************************************************************************/
+
+    /**
+     * Creates a new ColorStrategySectorShades {@link IColorStrategy}
+     */
     public ColorStrategySectorShades(){
 
         // We define some nice looking colors for our first few sectors
@@ -31,6 +45,12 @@ public class ColorStrategySectorShades implements IColorStrategy{
 
     }
 
+    /***************************************************************************
+     *                                                                         *
+     * Overridden Public API                                                   *
+     *                                                                         *
+     **************************************************************************/
+
     @Override
     public Color colorFor(WeightedTreeItem<?> item, int sector, int level) {
         Color color = getSectorColor(sector);
@@ -40,6 +60,11 @@ public class ColorStrategySectorShades implements IColorStrategy{
         return color;
     }
 
+    /***************************************************************************
+     *                                                                         *
+     * Private methods                                                         *
+     *                                                                         *
+     **************************************************************************/
 
     private Color getSectorColor(int sector){
         while(sectorColors.size() <= (sector)){

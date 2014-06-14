@@ -21,12 +21,12 @@ public class LegendItem extends HBox{
     private Rectangle rect;
     private Label label;
 
+
     /***************************************************************************
      *                                                                         *
      * Constructor                                                             *
      *                                                                         *
      **************************************************************************/
-
 
     /**
      * Creates a new LegendItem with the given color and text
