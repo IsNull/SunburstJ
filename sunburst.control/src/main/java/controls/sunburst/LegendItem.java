@@ -12,9 +12,27 @@ import javafx.scene.shape.Rectangle;
  */
 public class LegendItem extends HBox{
 
+    /***************************************************************************
+     *                                                                         *
+     * Private fields                                                          *
+     *                                                                         *
+     **************************************************************************/
+
     private Rectangle rect;
     private Label label;
 
+    /***************************************************************************
+     *                                                                         *
+     * Constructor                                                             *
+     *                                                                         *
+     **************************************************************************/
+
+
+    /**
+     * Creates a new LegendItem with the given color and text
+     * @param color
+     * @param text
+     */
     public LegendItem(Color color, String text) {
         this.label = new Label(text);
 
@@ -28,6 +46,13 @@ public class LegendItem extends HBox{
 
         this.getStyleClass().add("legend-item");
     }
+
+    /***************************************************************************
+     *                                                                         *
+     * Public API                                                              *
+     *                                                                         *
+     **************************************************************************/
+
 
     /**
      * Sets the color of the enumeration sign.

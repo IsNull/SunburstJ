@@ -10,35 +10,77 @@ import javafx.scene.control.TreeItem;
  */
 public class WeightedTreeItem<T> extends TreeItem<T> {
 
+    /***************************************************************************
+     *                                                                         *
+     * Private Fields                                                          *
+     *                                                                         *
+     **************************************************************************/
+
     private final ObjectProperty<Double> weight = new SimpleObjectProperty<>(this, "weight", 0d);
 
+
+    /***************************************************************************
+     *                                                                         *
+     * Constructor                                                             *
+     *                                                                         *
+     **************************************************************************/
+
+
+    /**
+     * Creates an empty WeightedTreeItem
+     */
     public WeightedTreeItem() {
         this(0, null);
     }
 
+    /**
+     *
+     * @param weightValue
+     * @param value
+     */
     public WeightedTreeItem(double weightValue, T value) {
         setWeight(weightValue);
         setValue(value);
     }
 
+
+    /***************************************************************************
+     *                                                                         *
+     * Public API                                                              *
+     *                                                                         *
+     **************************************************************************/
+
+    /**
+     * The weight property
+     * @return
+     */
     public ObjectProperty<Double> weightProperty() {
         return weight;
     }
 
+    /**
+     * Get the weight of this item
+     * @return
+     */
     public final double getWeight() {
         return weightProperty().get();
     }
 
+    /**
+     * Set the weight of this item
+     * @param weightValue
+     */
     public void setWeight(double weightValue) {
         weightProperty().set(weightValue);
     }
 
+    /**
+     * Returns all children of this WeightedTreeItem
+     * @return
+     */
     public ObservableList<WeightedTreeItem<T>> getChildrenWeighted() {
         return (ObservableList<WeightedTreeItem<T>>) (ObservableList<?>) getChildren();
     }
-
-    // private final double DIRTY_FLAG = -1;
-    // private double totalChildrenAbsoluteWeight = DIRTY_FLAG;
 
 
     /**
@@ -56,21 +98,28 @@ public class WeightedTreeItem<T> extends TreeItem<T> {
         return relativeWeight;
     }
 
+    public String toString(){
+        return "(" + getValue().toString() + " : " + getRelativeWeight()+ ")";
+    }
+
+
+    /***************************************************************************
+     *                                                                         *
+     * Private methods                                                         *
+     *                                                                         *
+     **************************************************************************/
+
+
     /**
      * Get the absolute total weight of the children.
      *
      * @return
      */
-    public synchronized double getChildrenAbsoluteWeight() {
+    private synchronized double getChildrenAbsoluteWeight() {
         double totalChildrenAbsoluteWeight = 0;
         for (WeightedTreeItem<T> child : getChildrenWeighted()) {
             totalChildrenAbsoluteWeight += child.getWeight();
         }
         return totalChildrenAbsoluteWeight;
     }
-
-    public String toString(){
-        return "(" + getValue().toString() + " : " + getRelativeWeight()+ ")";
-    }
-
 }

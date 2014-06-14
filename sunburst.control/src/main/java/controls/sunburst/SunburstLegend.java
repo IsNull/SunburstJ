@@ -4,9 +4,6 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Represents the legend visual for a sunburst view.
  *
@@ -41,13 +38,10 @@ public class SunburstLegend extends VBox {
 
         this.setMinWidth(200);
 
-
-
         sunburstView.setOnVisualChanged(x -> updateLegend());
 
         setLegendItemMax(20);
     }
-
 
 
     /***************************************************************************
@@ -56,16 +50,24 @@ public class SunburstLegend extends VBox {
      *                                                                         *
      **************************************************************************/
 
+    /**
+     * Gets the maximum number of legend items which will be displayed
+     * @return
+     */
     public int getLegendItemMax() {
         return legendItemMax;
     }
 
+    /**
+     * Set the maximum number of legend items which will be displayed
+     * @param legendItemMax
+     */
     public void setLegendItemMax(int legendItemMax) {
         this.legendItemMax = legendItemMax;
     }
 
     /**
-     * Clears the content of the legend.
+     * Removes all legend items
      */
     public void clearLegend() {
         this.getChildren().clear();
