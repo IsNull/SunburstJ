@@ -235,8 +235,7 @@ public class SunburstView<T> extends Control {
     }
 
     /** {@inheritDoc} */
-    @Override
-	public String getUserAgentStylesheet() {
+    @Override public String getUserAgentStylesheet() {
         return SunburstView.class.getResource("sunburstview.css").toExternalForm(); //$NON-NLS-1$
     }
 
