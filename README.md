@@ -11,7 +11,6 @@ The source code is freely available under the terms of MIT Licence: https://gith
 (lulz intended)
 
 [![Feature Video of SunburstJ](http://img.youtube.com/vi/sju6Xg9dPZU/0.jpg)](https://www.youtube.com/watch?v=sju6Xg9dPZU)
-https://www.youtube.com/watch?v=sju6Xg9dPZU
 
 
 
